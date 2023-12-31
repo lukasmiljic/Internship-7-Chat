@@ -23,6 +23,7 @@ namespace Chat.Data.Entities
         public DbSet<UserChannel> UserChannels => Set<UserChannel>();
         public DbSet<Message> Message => Set<Message>();
 
+        //jel mi treba ovo?
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserChannel>()
@@ -30,6 +31,18 @@ namespace Chat.Data.Entities
                 .WithMany(y => y.Users)
                 .UsingEntity(j => j.ToTable("GroupUser"));
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Message>()
+                .HasOne(x => x.Sender)
+                .WithMany(y => y.SentMessages)
+                .HasForeignKey(x => x.SenderFK)
+                .IsRequired();
+
+            modelBuilder.Entity<Message>()
+                .HasOne(x => x.Recipient)
+                .WithMany(y => y.RecievedMessages)
+                .HasForeignKey(x => x.RecipientFK)
+                .IsRequired();
         }
 
         public class ChatDbContextFactory : IDesignTimeDbContextFactory<ChatDbContext>

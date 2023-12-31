@@ -19,7 +19,8 @@ namespace Chat.Presentation
                 Console.WriteLine("[2] Register");
                 Console.WriteLine("[0] Exit");
 
-                if (!Helper.ValidateInput(ref userChoice, 6)) {
+                if (!Helper.ValidateInput(ref userChoice, 6))
+                {
                     Helper.ErrorMessage(0);
                     userChoice = -1;
                     continue;
@@ -126,7 +127,8 @@ namespace Chat.Presentation
             return false;
         }
 
-        private static void LoginScreen() {
+        private static void LoginScreen()
+        {
             //Odabirom logina se od korisnika traži prvo mail, a zatim lozinka.
             //Ukoliko je netočna kombinacija maila i lozinke unesena, korisnika
             //se vraća na login proces ali uz timeout login procesa za 30 sekundi
@@ -411,9 +413,11 @@ namespace Chat.Presentation
             //ispis poruka kronoloskim redosljedom
         }
 
-        private static bool ExitApplication() {
+        private static bool ExitApplication()
+        {
             Console.Clear();
-            if (Helper.AreYouSure()) {
+            if (Helper.AreYouSure())
+            {
                 Console.WriteLine("Goodbye...");
                 Thread.Sleep(1000);
                 return true;
