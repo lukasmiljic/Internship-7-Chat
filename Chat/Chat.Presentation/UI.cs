@@ -51,7 +51,79 @@ namespace Chat.Presentation
             //registrira bot. Korisnik mora ponoviti unos ispisane generirane
             //riječi. Potrebno je provjeriti ispravnost mail adrese i provjeriti
             //da ne postoji vec neki korisnik s istom mail adresom
-            throw new NotImplementedException();
+            string email;
+            string password;
+            string passwordAgain;
+            string captcha;
+            bool inputSuccess;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Register");
+
+                do
+                {
+                    Console.WriteLine("Email: ");
+                    email = Console.ReadLine();
+                    if (RegisterVerifyEmailAndPrintMsg(email)) continue;
+                } while (true);
+                do
+                {
+                    Console.WriteLine("Password: ");
+                    password = Console.ReadLine();
+                    if (RegisterVerifyPasswordAndPrintMsg(password)) continue;
+                } while (true);
+                do
+                {
+                    Console.WriteLine("Confirm Password: ");
+                    passwordAgain = Console.ReadLine();
+                    if (password == passwordAgain) continue;
+                    Console.WriteLine("Passwords don't match!");
+                } while (true);
+                do
+                {
+                    //generate rndm string for captcha
+                    Console.WriteLine($"Enter captcha[{captcha}]: ");
+                    passwordAgain = Console.ReadLine();
+                    if (password == passwordAgain) continue;
+                    Console.WriteLine("Captcha doesn't match!");
+                } while (true);
+            } while (true);
+            //MainMenu(userID);
+        }
+        //razbit verify and print i to u odvojene helper fje 
+        private static bool RegisterVerifyPasswordAndPrintMsg(string password)
+        {
+            if (password.Length < 1)
+            {
+                Console.WriteLine("Password field can't be empty!");
+                return false;
+            }
+            return true;
+        }
+
+        private static bool RegisterVerifyEmailAndPrintMsg(string email)
+        {
+            int returnValue = 0;
+            //domain.VerifyEmail(inputEmail)
+            switch (returnValue)
+            {
+                case 1:
+                    //email length < 1 cant leave email field empty
+                    break;
+
+                case 2:
+                    //email doesnt  match pattern text@text.com
+                    break;
+
+                case 3:
+                    //user with that email already exists
+                    break;
+
+                default:
+                    return true;
+            }
+            return false;
         }
 
         private static void LoginScreen() {
@@ -59,11 +131,75 @@ namespace Chat.Presentation
             //Ukoliko je netočna kombinacija maila i lozinke unesena, korisnika
             //se vraća na login proces ali uz timeout login procesa za 30 sekundi
             //kako bi bili sigurni da nije bot
-            throw new NotImplementedException();
+
+            string email;
+            string password;
+            bool inputSuccess;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Login");
+
+                do
+                {
+                    Console.WriteLine("Email: ");
+                    email = Console.ReadLine();
+                    if (LoginVerifyEmailAndPrintMsg(email)) continue;
+                } while (true);
+
+                Console.WriteLine("Password: ");
+                password = Console.ReadLine();
+                if (LoginVerifyPasswordAndPrintMsg(password)) continue;
+                //korisnik ide u time out
+            } while (true);
+            //MainMenu(userID);
         }
-        public static void MainMenu()
+
+        private static bool LoginVerifyPasswordAndPrintMsg(string password)
         {
-            //otvara se nakon uspjesnog logina
+            int temp = 5;
+            switch (temp)//domain.VerifyPassword(password)
+            {
+                case 1:
+                    //password length < 1 cant leave email field empty
+                    break;
+
+                case 2:
+                    //password doesnt match
+                    break;
+
+                default:
+                    return true;
+            }
+            return false;
+        }
+        private static bool LoginVerifyEmailAndPrintMsg(string inputEmail)
+        {
+            int returnValue = 0;
+            //domain.VerifyEmail(inputEmail)
+            switch (returnValue)
+            {
+                case 1:
+                    //email length < 1 cant leave email field empty
+                    break;
+
+                case 2:
+                    //email doesnt  match pattern text@text.com
+                    break;
+
+                case 3:
+                    //no user with that email
+                    break;
+
+                default:
+                    return true;
+            }
+            return false;
+        }
+
+        //saljem mail pa preko njega znam koje poruke ucitavat
+        public static void MainMenu(string email)
+        {
             //admin ima dodatno polje za upravljanje s korisnicima
             var userChoice = -1;
             do

@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using System.Threading.Channels;
+using System.Text.RegularExpressions;
+using Chat.Data.Entities.Models;
 
 namespace Chat.Data.Entities
 {
@@ -15,6 +18,20 @@ namespace Chat.Data.Entities
         public ChatDbContext(DbContextOptions options) : base(options)
         {
         }
+        public DbSet<MessageChannel> MessageChannels => Set<MessageChannel>();
+        public DbSet<GroupChannel> GroupChannels => Set<GroupChannel>();
+        public DbSet<UserChannel> UserChannels => Set<UserChannel>();
+        public DbSet<Message> Message => Set<Message>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserChannel>()
+                .HasMany(x => x.GroupChannels)
+                .WithMany(y => y.Users)
+                .UsingEntity(j => j.ToTable("GroupUser"));
+            base.OnModelCreating(modelBuilder);
+        }
+
         public class ChatDbContextFactory : IDesignTimeDbContextFactory<ChatDbContext>
         {
             public ChatDbContext CreateDbContext(string[] args)
@@ -26,7 +43,7 @@ namespace Chat.Data.Entities
 
                 config.Providers
                     .First()
-                    .TryGet("connectionStrings:add:TodoApp:connectionString", out var connectionString);
+                    .TryGet("connectionStrings:add:Chat:connectionString", out var connectionString);
 
                 var options = new DbContextOptionsBuilder<ChatDbContext>()
                     .UseNpgsql(connectionString)
