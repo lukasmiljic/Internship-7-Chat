@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Chat.Presentation
+﻿namespace Chat.Presentation
 {
     public class Helper
     {
+        //general
         public static void PressAnything() {
             Console.WriteLine("Press anything to continue...");
             Console.ReadLine();
@@ -39,6 +34,87 @@ namespace Chat.Presentation
                     break;
             }
             PressAnything();
+        }
+
+        //user authentication
+        public static void TimeOut()
+        {
+            Console.Clear();
+            Console.WriteLine("Wrong password.\nPlease wait 5sec");
+            Thread.Sleep(5000);
+        }
+        public static bool RegisterVerifyPasswordAndPrintMsg(string password)
+        {
+            if (password.Length < 1)
+            {
+                Console.WriteLine("Password field can't be empty!");
+                return false;
+            }
+            return true;
+        }
+        public static bool RegisterVerifyEmailAndPrintMsg(string email)
+        {
+            int returnValue = 0;
+            //domain.VerifyEmail(inputEmail)
+            switch (returnValue)
+            {
+                case 1:
+                    //email length < 1 cant leave email field empty
+                    break;
+
+                case 2:
+                    //email doesnt  match pattern text@text.com
+                    break;
+
+                case 3:
+                    //user with that email already exists
+                    break;
+
+                default:
+                    return true;
+            }
+            return false;
+        }
+        public static bool LoginVerifyPasswordAndPrintMsg(string password)
+        {
+            int temp = 0;
+            switch (temp)//domain.VerifyPassword(password)
+            {
+                case 1:
+                    //password length < 1 cant leave email field empty
+                    break;
+
+                case 2:
+                    //password doesnt match
+                    break;
+
+                default:
+                    return true;
+            }
+            return false;
+        }
+        public static bool LoginVerifyEmailAndPrintMsg(string inputEmail)
+        {
+            int returnValue = 0;
+            //returnValue = domain.VerifyEmail(inputEmail)
+            switch (returnValue)
+            {
+                case 1:
+                    //email length < 1 cant leave email field empty
+                    break;
+
+                case 2:
+                    //email doesnt  match pattern text@text.com
+                    break;
+
+                case 3:
+                    //no user with that email
+                    break;
+
+                default:
+                    return true;
+            }
+            return false;
         }
     }
 }

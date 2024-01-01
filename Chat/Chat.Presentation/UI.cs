@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Chat.Presentation
+﻿namespace Chat.Presentation
 {
     public class UI
     {
+        //user authentication
         public static void StartMenu()
         {
             var userChoice = -1;
@@ -29,7 +23,8 @@ namespace Chat.Presentation
                 switch (userChoice)
                 {
                     case 1:
-                        LoginScreen();
+                        if (!LoginScreen()) Helper.TimeOut();
+                        MainMenu();
                         break;
 
                     case 2:
@@ -42,92 +37,7 @@ namespace Chat.Presentation
                 }
             } while (userChoice != 0);
         }
-
-        private static void RegisterScreen()
-        {
-            //Ukoliko odabere registraciju, od korisnika se očekuje unos maila,
-            //nove i potvrdne lozinke koje moraju biti identične te kao treći
-            //korak generira se i ispiše random string (sastavljena od barem
-            //jednog slova i jedne brojke) koja služi kao captcha da se ne
-            //registrira bot. Korisnik mora ponoviti unos ispisane generirane
-            //riječi. Potrebno je provjeriti ispravnost mail adrese i provjeriti
-            //da ne postoji vec neki korisnik s istom mail adresom
-            string email;
-            string password;
-            string passwordAgain;
-            string captcha;
-            bool inputSuccess;
-            do
-            {
-                Console.Clear();
-                Console.WriteLine("Register");
-
-                do
-                {
-                    Console.WriteLine("Email: ");
-                    email = Console.ReadLine();
-                    if (RegisterVerifyEmailAndPrintMsg(email)) continue;
-                } while (true);
-                do
-                {
-                    Console.WriteLine("Password: ");
-                    password = Console.ReadLine();
-                    if (RegisterVerifyPasswordAndPrintMsg(password)) continue;
-                } while (true);
-                do
-                {
-                    Console.WriteLine("Confirm Password: ");
-                    passwordAgain = Console.ReadLine();
-                    if (password == passwordAgain) continue;
-                    Console.WriteLine("Passwords don't match!");
-                } while (true);
-                do
-                {
-                    //generate rndm string for captcha
-                    Console.WriteLine($"Enter captcha[{captcha}]: ");
-                    passwordAgain = Console.ReadLine();
-                    if (password == passwordAgain) continue;
-                    Console.WriteLine("Captcha doesn't match!");
-                } while (true);
-            } while (true);
-            //MainMenu(userID);
-        }
-        //razbit verify and print i to u odvojene helper fje 
-        private static bool RegisterVerifyPasswordAndPrintMsg(string password)
-        {
-            if (password.Length < 1)
-            {
-                Console.WriteLine("Password field can't be empty!");
-                return false;
-            }
-            return true;
-        }
-
-        private static bool RegisterVerifyEmailAndPrintMsg(string email)
-        {
-            int returnValue = 0;
-            //domain.VerifyEmail(inputEmail)
-            switch (returnValue)
-            {
-                case 1:
-                    //email length < 1 cant leave email field empty
-                    break;
-
-                case 2:
-                    //email doesnt  match pattern text@text.com
-                    break;
-
-                case 3:
-                    //user with that email already exists
-                    break;
-
-                default:
-                    return true;
-            }
-            return false;
-        }
-
-        private static void LoginScreen()
+        private static bool LoginScreen()
         {
             //Odabirom logina se od korisnika traži prvo mail, a zatim lozinka.
             //Ukoliko je netočna kombinacija maila i lozinke unesena, korisnika
@@ -141,66 +51,88 @@ namespace Chat.Presentation
             {
                 Console.Clear();
                 Console.WriteLine("Login");
+                do 
+                {
+                    Console.Write("Email: ");
+                    email = Console.ReadLine();
+                    if (Helper.LoginVerifyEmailAndPrintMsg(email)) break;
+                } while (true);
+
+                Console.Write("Password: ");
+                password = Console.ReadLine();
+                if (Helper.LoginVerifyPasswordAndPrintMsg(password)) break;
+                return false;
+            } while (true);
+            
+            Console.Clear();
+            Console.WriteLine("Welcome back {user.username}!");  //add
+            Helper.PressAnything();
+            return true;
+        }
+        private static void RegisterScreen()
+        {
+            //Ukoliko odabere registraciju, od korisnika se očekuje unos maila,
+            //nove i potvrdne lozinke koje moraju biti identične te kao treći
+            //korak generira se i ispiše random string (sastavljena od barem
+            //jednog slova i jedne brojke) koja služi kao captcha da se ne
+            //registrira bot. Korisnik mora ponoviti unos ispisane generirane
+            //riječi. Potrebno je provjeriti ispravnost mail adrese i provjeriti
+            //da ne postoji vec neki korisnik s istom mail adresom
+            string email;
+            string password;
+            string captcha = "some txt";
+            string input;
+            bool inputSuccess;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Register");
 
                 do
                 {
-                    Console.WriteLine("Email: ");
+                    Console.Write("Email: ");
                     email = Console.ReadLine();
-                    if (LoginVerifyEmailAndPrintMsg(email)) continue;
+                    if (Helper.RegisterVerifyEmailAndPrintMsg(email)) break;
                 } while (true);
-
-                Console.WriteLine("Password: ");
-                password = Console.ReadLine();
-                if (LoginVerifyPasswordAndPrintMsg(password)) continue;
-                //korisnik ide u time out
+                do
+                {
+                    Console.Write("Password: ");
+                    password = Console.ReadLine();
+                    if (Helper.RegisterVerifyPasswordAndPrintMsg(password)) break;
+                } while (true);
+                do
+                {
+                    Console.Write("Confirm Password: ");
+                    input = Console.ReadLine();
+                    if (password == input) break;
+                    Console.WriteLine("Passwords don't match!");
+                } while (true);
+                do
+                {
+                    //generate rndm string for captcha
+                    Console.Write($"Enter captcha[{captcha}]: ");
+                    input = Console.ReadLine();
+                    if (captcha == input) break;
+                    Console.WriteLine("Captcha doesn't match!");
+                } while (true);
+                break;
             } while (true);
-            //MainMenu(userID);
+            Console.Clear();
         }
-
-        private static bool LoginVerifyPasswordAndPrintMsg(string password)
+        private static bool ExitApplication()
         {
-            int temp = 5;
-            switch (temp)//domain.VerifyPassword(password)
+            Console.Clear();
+            if (Helper.AreYouSure())
             {
-                case 1:
-                    //password length < 1 cant leave email field empty
-                    break;
-
-                case 2:
-                    //password doesnt match
-                    break;
-
-                default:
-                    return true;
+                Console.WriteLine("Goodbye...");
+                Thread.Sleep(1000);
+                return true;
             }
-            return false;
-        }
-        private static bool LoginVerifyEmailAndPrintMsg(string inputEmail)
-        {
-            int returnValue = 0;
-            //domain.VerifyEmail(inputEmail)
-            switch (returnValue)
-            {
-                case 1:
-                    //email length < 1 cant leave email field empty
-                    break;
-
-                case 2:
-                    //email doesnt  match pattern text@text.com
-                    break;
-
-                case 3:
-                    //no user with that email
-                    break;
-
-                default:
-                    return true;
-            }
-            return false;
+            else return false;
         }
 
-        //saljem mail pa preko njega znam koje poruke ucitavat
-        public static void MainMenu(string email)
+        //main menu
+        public static void MainMenu()
         {
             //admin ima dodatno polje za upravljanje s korisnicima
             var userChoice = -1;
@@ -240,110 +172,15 @@ namespace Chat.Presentation
                 }
             } while (userChoice != 0);
         }
-
         private static bool LogOut()
         {
             Console.Clear();
+            Console.WriteLine("Log out");
             if (Helper.AreYouSure()) return true;
             else return false;
         }
 
-        private static void SettingsSubMenu()
-        {
-            var userChoice = -1;
-            do
-            {
-                Console.Clear();
-                Console.WriteLine("Settings");
-                Console.WriteLine("[1] Change password");
-                Console.WriteLine("[2] Change e-mail");
-                Console.WriteLine("[0] Main menu");
-
-                if (!Helper.ValidateInput(ref userChoice, 2))
-                {
-                    Helper.ErrorMessage(0);
-                    userChoice = -1;
-                    continue;
-                }
-
-                switch (userChoice)
-                {
-                    case 1:
-                        ChangePasswordScreen();
-                        break;
-
-                    case 2:
-                        ChangeEmailScreen();
-                        break;
-
-                    case 0:
-                        if (!LogOut()) userChoice = -1;
-                        break;
-                }
-            } while (userChoice != 0);
-        }
-
-        private static void ChangeEmailScreen()
-        {
-            //potrebno je unjet ponvno lozinku
-            throw new NotImplementedException();
-        }
-
-        private static void ChangePasswordScreen()
-        {
-            //prije promjene potrebno je unjeti staru lozinku
-            throw new NotImplementedException();
-        }
-
-        private static void PrivateMessagesSubMenu()
-        {
-            var userChoice = -1;
-            do
-            {
-                Console.Clear();
-                Console.WriteLine("Private messages");
-                Console.WriteLine("[1] New message");
-                Console.WriteLine("[2] All chats");
-                Console.WriteLine("[0] Main menu");
-
-                if (!Helper.ValidateInput(ref userChoice, 2))
-                {
-                    Helper.ErrorMessage(0);
-                    userChoice = -1;
-                    continue;
-                }
-
-                switch (userChoice)
-                {
-                    case 1:
-                        NewMessageScreen();
-                        break;
-
-                    case 2:
-                        AllChats();
-                        break;
-
-                    case 0:
-                        if (!LogOut()) userChoice = -1;
-                        break;
-                }
-            } while (userChoice != 0);
-        }
-
-        private static void AllChats()
-        {
-            //ispis svih korisnika s kojim je korisnik komunicirao
-            throw new NotImplementedException();
-        }
-
-        private static void NewMessageScreen()
-        {
-            //popis svih korisnika odabir jednog od njih otvara se privatni chat s korisnikom
-            //ako je vec prico sa njima prikazuju se stara poruke
-            //moguce je tipkati novu poruku
-            throw new NotImplementedException();
-        }
-
+        //group messages
         private static void GroupChannelsSubMenu()
         {
             var userChoice = -1;
@@ -377,20 +214,17 @@ namespace Chat.Presentation
                         AllChannelsScreen();
                         break;
 
-                    case 0:
-                        if (!LogOut()) userChoice = -1;
+                    default:
                         break;
                 }
             } while (userChoice != 0);
         }
-
-        private static void AllChannelsScreen()
+        private static void CreateNewGroupScreen()
         {
-            //ispis svih kanala u koje je korisnik usao zajedno s
-            //naredbom /open korisnik moze otvoriti chat
+            //unosi se naziv kanala; korisnik koji kreaira kanal
+            //automatski je dio kanala
             throw new NotImplementedException();
         }
-
         private static void EnterGroupScreen()
         {
             //prikazat listu svih kanala u koje korisnik nije usao
@@ -398,31 +232,109 @@ namespace Chat.Presentation
             //naredbom /enter korisnik moze uc u neki od kanala
             throw new NotImplementedException();
         }
-
-        private static void CreateNewGroupScreen()
+        private static void AllChannelsScreen()
         {
-            //unosi se naziv kanala; korisnik koji kreaira kanal
-            //automatski je dio kanala
+            //ispis svih kanala u koje je korisnik usao zajedno s
+            //naredbom /open korisnik moze otvoriti chat
             throw new NotImplementedException();
         }
-
         private static void ViewMessages()
         {
             //otvara se ulaskom u neki chat
             //za izlaz nazad se koristi komanda /exit
             //ispis poruka kronoloskim redosljedom
         }
-
-        private static bool ExitApplication()
+        
+        //private messages
+        private static void PrivateMessagesSubMenu()
         {
-            Console.Clear();
-            if (Helper.AreYouSure())
+            var userChoice = -1;
+            do
             {
-                Console.WriteLine("Goodbye...");
-                Thread.Sleep(1000);
-                return true;
-            }
-            else return false;
+                Console.Clear();
+                Console.WriteLine("Private messages");
+                Console.WriteLine("[1] New message");
+                Console.WriteLine("[2] All chats");
+                Console.WriteLine("[0] Main menu");
+
+                if (!Helper.ValidateInput(ref userChoice, 2))
+                {
+                    Helper.ErrorMessage(0);
+                    userChoice = -1;
+                    continue;
+                }
+
+                switch (userChoice)
+                {
+                    case 1:
+                        NewMessageScreen();
+                        break;
+
+                    case 2:
+                        AllChats();
+                        break;
+
+                    default:
+                        break;
+                }
+            } while (userChoice != 0);
+        }
+        private static void AllChats()
+        {
+            //ispis svih korisnika s kojim je korisnik komunicirao
+            throw new NotImplementedException();
+        }
+        private static void NewMessageScreen()
+        {
+            //popis svih korisnika odabir jednog od njih otvara se privatni chat s korisnikom
+            //ako je vec prico sa njima prikazuju se stara poruke
+            //moguce je tipkati novu poruku
+            throw new NotImplementedException();
+        }
+
+        //settings
+        private static void SettingsSubMenu()
+        {
+            var userChoice = -1;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Settings");
+                Console.WriteLine("[1] Change password");
+                Console.WriteLine("[2] Change e-mail");
+                Console.WriteLine("[0] Main menu");
+
+                if (!Helper.ValidateInput(ref userChoice, 2))
+                {
+                    Helper.ErrorMessage(0);
+                    userChoice = -1;
+                    continue;
+                }
+
+                switch (userChoice)
+                {
+                    case 1:
+                        ChangePasswordScreen();
+                        break;
+
+                    case 2:
+                        ChangeEmailScreen();
+                        break;
+
+                    default:
+                        break;
+                }
+            } while (userChoice != 0);
+        }
+        private static void ChangeEmailScreen()
+        {
+            //potrebno je unjet ponvno lozinku
+            throw new NotImplementedException();
+        }
+        private static void ChangePasswordScreen()
+        {
+            //prije promjene potrebno je unjeti staru lozinku
+            throw new NotImplementedException();
         }
     }
 }

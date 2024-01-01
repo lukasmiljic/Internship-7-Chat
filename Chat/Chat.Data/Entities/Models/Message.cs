@@ -18,7 +18,6 @@ namespace Chat.Data.Entities.Models
         [ForeignKey("MessageChannel")]
         public int RecipientFK { get; set; }
         public MessageChannel Recipient { get; set; }
-        //ovdi i u messagechannel je problem 
 
     }
 }
