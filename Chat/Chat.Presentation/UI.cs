@@ -124,13 +124,14 @@
             Console.Clear();
             if (Helper.AreYouSure())
             {
+                Console.Clear();
                 Console.WriteLine("Goodbye...");
-                Thread.Sleep(1000);
                 return true;
             }
             else return false;
         }
 
+        //how do i track who is logged in?
         //main menu
         public static void MainMenu()
         {
@@ -221,22 +222,45 @@
         }
         private static void CreateNewGroupScreen()
         {
-            //unosi se naziv kanala; korisnik koji kreaira kanal
-            //automatski je dio kanala
-            throw new NotImplementedException();
+            string groupTitle;
+            bool confirmation;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Create new Group Channel");
+                Console.Write("Group title: ");
+                groupTitle = Console.ReadLine();
+                Console.WriteLine($"Create new group named {groupTitle}?");
+                confirmation = Helper.AreYouSure();
+            } while (!confirmation);
+            //create channel and add user
+            //domain.creategroupchannel
+            //domain.addusertogroup
+            Console.WriteLine("Successfully created new group!");
+            Helper.PressAnything();
         }
         private static void EnterGroupScreen()
         {
-            //prikazat listu svih kanala u koje korisnik nije usao
-            //zajedno s brojem korisnika u kanalu
-            //naredbom /enter korisnik moze uc u neki od kanala
-            throw new NotImplementedException();
+            //modify so it uses /enter command 
+            //store user input as string trim last part of said string for groupIdToEnter
+            //see https://stackoverflow.com/questions/4603911/extract-the-last-word-from-a-string-using-c-sharp
+            //check if part of string is "/enter" if not print error message
+            Console.Clear();
+            Console.WriteLine("Enter Group Channel\t\t/enter [CHANNEL_ID]");
+            // print out all the channels that user is not in with the number of users beside it
+            //domain.printavailablechannels()
+            int groupIdToEnter = 0;
+            Helper.EnterNumeric(ref groupIdToEnter);
+            //if (domain.entergroupchannel() == false) //check that gropIdToEnter is a valid id
+            Console.WriteLine("Successfully joined group channel");
+            Helper.PressAnything();
         }
         private static void AllChannelsScreen()
-        {
-            //ispis svih kanala u koje je korisnik usao zajedno s
-            //naredbom /open korisnik moze otvoriti chat
-            throw new NotImplementedException();
+        { 
+            Console.Clear();
+            Console.WriteLine("All Group Channels");
+            //domain.printusersgroups //print all the group channels that the user is in
+            Helper.PressAnything();
         }
         private static void ViewMessages()
         {

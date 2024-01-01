@@ -1,4 +1,5 @@
-﻿namespace Chat.Presentation
+﻿
+namespace Chat.Presentation
 {
     public class Helper
     {
@@ -34,6 +35,15 @@
                     break;
             }
             PressAnything();
+        }
+        internal static void EnterNumeric(ref int groupIdToEnter)
+        {
+            var isNumeric = int.TryParse(Console.ReadLine(), out groupIdToEnter);
+            if (isNumeric == false)
+            {
+                Console.WriteLine("Error! Enter a number");
+                PressAnything();
+            }
         }
 
         //user authentication
