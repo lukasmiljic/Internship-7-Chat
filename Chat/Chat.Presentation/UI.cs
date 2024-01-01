@@ -246,7 +246,7 @@
             //see https://stackoverflow.com/questions/4603911/extract-the-last-word-from-a-string-using-c-sharp
             //check if part of string is "/enter" if not print error message
             Console.Clear();
-            Console.WriteLine("Enter Group Channel\t\t/enter [CHANNEL_ID]");
+            Console.WriteLine("Enter Group Channel\t\t/enter [CHANNEL_ID]\t/exit");
             // print out all the channels that user is not in with the number of users beside it
             //domain.printavailablechannels()
             int groupIdToEnter = 0;
@@ -254,6 +254,7 @@
             //if (domain.entergroupchannel() == false) //check that gropIdToEnter is a valid id
             Console.WriteLine("Successfully joined group channel");
             Helper.PressAnything();
+            ViewMessages(groupIdToEnter);
         }
         private static void AllChannelsScreen()
         { 
@@ -262,11 +263,12 @@
             //domain.printusersgroups //print all the group channels that the user is in
             Helper.PressAnything();
         }
-        private static void ViewMessages()
+        private static void ViewMessages(int channelID)
         {
-            //otvara se ulaskom u neki chat
-            //za izlaz nazad se koristi komanda /exit
-            //ispis poruka kronoloskim redosljedom
+            //Console.Write("${channelID.Title} \t\t/exit")
+            //domain.ViewMessages(channelId)
+            Console.Write("New message: ");
+            //similar code as in entergroup for /enter
         }
         
         //private messages
@@ -276,10 +278,10 @@
             do
             {
                 Console.Clear();
-                Console.WriteLine("Private messages");
-                Console.WriteLine("[1] New message");
-                Console.WriteLine("[2] All chats");
-                Console.WriteLine("[0] Main menu");
+                Console.WriteLine("Private Messages");
+                Console.WriteLine("[1] New Message");
+                Console.WriteLine("[2] All Chats");
+                Console.WriteLine("[0] Main Menu");
 
                 if (!Helper.ValidateInput(ref userChoice, 2))
                 {
@@ -303,17 +305,18 @@
                 }
             } while (userChoice != 0);
         }
-        private static void AllChats()
-        {
-            //ispis svih korisnika s kojim je korisnik komunicirao
-            throw new NotImplementedException();
-        }
         private static void NewMessageScreen()
         {
-            //popis svih korisnika odabir jednog od njih otvara se privatni chat s korisnikom
-            //ako je vec prico sa njima prikazuju se stara poruke
-            //moguce je tipkati novu poruku
-            throw new NotImplementedException();
+            Console.WriteLine("New Message\t\t/enter [USER_ID]\t/exit");
+            //domain.allusers() //print out every user
+            //similar code to entergroupscreen()
+            //call viewmessages() after getting userid
+        }
+        private static void AllChats()
+        {
+            Console.WriteLine("All Chats");
+            //domain.userallchats() //list of every user that logged in user has chatted with
+            Helper.PressAnything();
         }
 
         //settings
