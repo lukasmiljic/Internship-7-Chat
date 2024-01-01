@@ -1,4 +1,6 @@
-﻿namespace Chat.Presentation
+﻿using Microsoft.EntityFrameworkCore.Storage.Json;
+
+namespace Chat.Presentation
 {
     public class UI
     {
@@ -355,13 +357,47 @@
         }
         private static void ChangeEmailScreen()
         {
-            //potrebno je unjet ponvno lozinku
-            throw new NotImplementedException();
+            Console.WriteLine("Change Email");
+            //Console.WriteLine($"Old mail: {user.mail}")
+            string newMail;
+            do
+            {
+                Console.Write("New mail: ");
+                newMail = Console.ReadLine();
+                if (Helper.RegisterVerifyEmailAndPrintMsg(newMail)) break;
+            } while (true);
+            do
+            {
+                Console.Write("Password : ");
+                //if(user.password == console.readline()) break;
+                break;
+            } while (true);
+            if (!Helper.AreYouSure()) return;
+            //domain.changemail()
+            Console.WriteLine("Successfully changed Email!");
+            Helper.PressAnything();
         }
         private static void ChangePasswordScreen()
         {
-            //prije promjene potrebno je unjeti staru lozinku
-            throw new NotImplementedException();
+            Console.WriteLine("Change Password");
+            //Console.WriteLine($"Old mail: {user.mail}")
+            string newPassword;
+            do
+            {
+                Console.Write("New password: ");
+                newPassword = Console.ReadLine();
+                if (Helper.RegisterVerifyPasswordAndPrintMsg(newPassword)) break;
+            } while (true);
+            do
+            {
+                Console.Write("Old Password : ");
+                //if(user.password == console.readline()) break;
+                break;
+            } while (true);
+            if (!Helper.AreYouSure()) return;
+            //domain.changemail()
+            Console.WriteLine("Successfully changed Password!");
+            Helper.PressAnything();
         }
     }
 }
