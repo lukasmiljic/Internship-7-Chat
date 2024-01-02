@@ -4,7 +4,7 @@ using TodoApp.Domain.Enums;
 
 namespace Chat.Domain.Repositories
 {
-    internal class GroupUserRepository : BaseRepository
+    public class GroupUserRepository : BaseRepository
     {
         public GroupUserRepository(ChatDbContext dbContext) : base(dbContext)
         {

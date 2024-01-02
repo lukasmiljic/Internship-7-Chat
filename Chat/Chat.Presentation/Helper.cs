@@ -1,11 +1,17 @@
-﻿namespace Chat.Presentation
+﻿using Chat.Data.Entities.Models;
+using Chat.Domain.Actions;
+using Chat.Domain.Enums;
+using Chat.Domain.Factories;
+using Chat.Domain.Repositories;
+
+namespace Chat.Presentation
 {
     public class Helper
     {
         //general
         public static void PressAnything() {
             Console.WriteLine("Press anything to continue...");
-            Console.ReadLine();
+            Console.ReadKey();
         }
         public static bool AreYouSure() {
             do {
@@ -84,46 +90,36 @@
             }
             return false;
         }
-        public static bool LoginVerifyPasswordAndPrintMsg(string password)
+        public static UserChannel? LoginVerifyEmailAndPrintMsg(string inputEmail)
         {
-            int temp = 0;
-            switch (temp)//domain.VerifyPassword(password)
+            var userChannelRepository = new UserChannelRepository(DbContextFactory.GetDbContext());
+            switch (UserAuthentication.ValidateEmail(inputEmail))
             {
-                case 1:
-                    //password length < 1 cant leave email field empty
+                case EmailResultType.NotFound:
+                    Console.WriteLine($"Error! No user with email {inputEmail}");
+                    PressAnything();
                     break;
 
-                case 2:
-                    //password doesnt match
+                case EmailResultType.InvalidFormat:
+                    Console.WriteLine("Error! Invalid email format");
+                    PressAnything();
+                    break;
+
+                case EmailResultType.InvalidLength:
+                    Console.WriteLine("Error! Email field cant be empty");
+                    PressAnything();
                     break;
 
                 default:
-                    return true;
+                    return userChannelRepository.GetUserByEmail(inputEmail);
             }
-            return false;
+            return null;
         }
-        public static bool LoginVerifyEmailAndPrintMsg(string inputEmail)
+        public static void Greetings(UserChannel user)
         {
-            int returnValue = 0;
-            //returnValue = domain.VerifyEmail(inputEmail)
-            switch (returnValue)
-            {
-                case 1:
-                    //email length < 1 cant leave email field empty
-                    break;
-
-                case 2:
-                    //email doesnt  match pattern text@text.com
-                    break;
-
-                case 3:
-                    //no user with that email
-                    break;
-
-                default:
-                    return true;
-            }
-            return false;
+            Console.Clear();
+            Console.WriteLine($"Welcome {user.Username}!");
+            PressAnything();
         }
     }
 }

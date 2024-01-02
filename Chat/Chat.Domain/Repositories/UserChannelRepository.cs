@@ -4,7 +4,7 @@ using TodoApp.Domain.Enums;
 
 namespace Chat.Domain.Repositories
 {
-    internal class UserChannelRepository : BaseRepository
+    public class UserChannelRepository : BaseRepository
     {
         public UserChannelRepository(ChatDbContext dbContext) : base(dbContext)
         {
@@ -38,6 +38,11 @@ namespace Chat.Domain.Repositories
             userChannelToUpdate.IsAdmin = userChannel.IsAdmin;
 
             return SaveChanges();
+        }
+        public UserChannel? GetUserByEmail (string email)
+        {
+            if (!DbContext.UserChannels.Any(x => x.Email == email)) return null;
+            else return DbContext.UserChannels.First(x => x.Email == email);
         }
     }
 }

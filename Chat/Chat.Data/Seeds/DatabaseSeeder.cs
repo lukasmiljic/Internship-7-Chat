@@ -69,10 +69,11 @@ namespace Chat.Data.Seeds
                 });
 
             builder.Entity<Message>()
-                .HasData(new List<Message>() 
+                .HasData(new List<Message>()
                 {
                     new Message()
                     {
+                        MessageID = 1,
                         SendTime = new DateTime(2024,1,1,12,30,30),
                         SenderFK = 1,
                         RecipientFK = 6,
@@ -80,6 +81,7 @@ namespace Chat.Data.Seeds
                     },
                     new Message()
                     {
+                        MessageID = 2,
                         SendTime = new DateTime(2024,1,1,12,31,30),
                         SenderFK = 1,
                         RecipientFK = 6,
@@ -87,6 +89,7 @@ namespace Chat.Data.Seeds
                     },
                     new Message()
                     {
+                        MessageID = 3,
                         SendTime = new DateTime(2024,1,1,12,32,30),
                         SenderFK = 1,
                         RecipientFK = 6,
@@ -94,6 +97,7 @@ namespace Chat.Data.Seeds
                     },
                     new Message()
                     {
+                        MessageID = 4,
                         SendTime = new DateTime(2024,1,1,12,33,30),
                         SenderFK = 1,
                         RecipientFK = 2,
@@ -101,12 +105,13 @@ namespace Chat.Data.Seeds
                     },
                     new Message()
                     {
+                        MessageID = 5,
                         SendTime = new DateTime(2024,1,1,12,34,30),
                         SenderFK = 1,
                         RecipientFK = 2,
                         Body = "Private channel test message 2"
                     }
-                });
+                }) ;
         }
     }
 }

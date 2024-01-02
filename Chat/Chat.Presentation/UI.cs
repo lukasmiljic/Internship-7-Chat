@@ -1,4 +1,9 @@
-﻿namespace Chat.Presentation
+﻿using Chat.Data.Entities.Models;
+using Chat.Domain.Repositories;
+using Chat.Domain.Factories;
+using Microsoft.EntityFrameworkCore.Internal;
+
+namespace Chat.Presentation
 {
     public class UI
     {
@@ -23,8 +28,9 @@
                 switch (userChoice)
                 {
                     case 1:
-                        if (!LoginScreen()) Helper.TimeOut();
-                        MainMenu();
+                        var user = LoginScreen();
+                        if (user is null) Helper.TimeOut();
+                        else MainMenu(user);
                         break;
 
                     case 2:
@@ -37,16 +43,10 @@
                 }
             } while (userChoice != 0);
         }
-        private static bool LoginScreen()
+        private static UserChannel? LoginScreen()
         {
-            //Odabirom logina se od korisnika traži prvo mail, a zatim lozinka.
-            //Ukoliko je netočna kombinacija maila i lozinke unesena, korisnika
-            //se vraća na login proces ali uz timeout login procesa za 30 sekundi
-            //kako bi bili sigurni da nije bot
-
-            string email;
-            string password;
-            bool inputSuccess;
+            string inputEmail, inputPassword;
+            UserChannel user;
             do
             {
                 Console.Clear();
@@ -54,20 +54,18 @@
                 do 
                 {
                     Console.Write("Email: ");
-                    email = Console.ReadLine();
-                    if (Helper.LoginVerifyEmailAndPrintMsg(email)) break;
+                    inputEmail = Console.ReadLine();
+                    user = Helper.LoginVerifyEmailAndPrintMsg(inputEmail);
+                    if (user != null) break;
                 } while (true);
 
                 Console.Write("Password: ");
-                password = Console.ReadLine();
-                if (Helper.LoginVerifyPasswordAndPrintMsg(password)) break;
-                return false;
+                inputPassword = Console.ReadLine();
+                if (inputPassword == user.Password) break;
+                return null;
             } while (true);
-            
-            Console.Clear();
-            Console.WriteLine("Welcome back {user.username}!");  //add
-            Helper.PressAnything();
-            return true;
+            Helper.Greetings(user);
+            return user;
         }
         private static void RegisterScreen()
         {
@@ -133,7 +131,7 @@
 
         //how do i track who is logged in?
         //main menu
-        public static void MainMenu()
+        public static void MainMenu(UserChannel loggedInUser)
         {
             //admin ima dodatno polje za upravljanje s korisnicima
             var userChoice = -1;
