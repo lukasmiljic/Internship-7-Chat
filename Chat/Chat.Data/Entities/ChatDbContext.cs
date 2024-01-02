@@ -1,15 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using System.Threading.Channels;
-using System.Text.RegularExpressions;
 using Chat.Data.Entities.Models;
+using Chat.Data.Seeds;
 
 namespace Chat.Data.Entities
 {
@@ -22,8 +15,6 @@ namespace Chat.Data.Entities
         public DbSet<GroupChannel> GroupChannels => Set<GroupChannel>();
         public DbSet<UserChannel> UserChannels => Set<UserChannel>();
         public DbSet<Message> Message => Set<Message>();
-
-        //jel mi treba ovo?
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<MessageChannel>().UseTptMappingStrategy();
@@ -32,7 +23,10 @@ namespace Chat.Data.Entities
                 .HasMany(x => x.GroupChannels)
                 .WithMany(y => y.Users)
                 .UsingEntity(j => j.ToTable("GroupUser"));
-            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UserChannel>()
+                .Property(uc => uc.IsAdmin)
+                .HasDefaultValue(false);
 
             modelBuilder.Entity<Message>()
                 .HasOne(x => x.Sender)
@@ -45,8 +39,10 @@ namespace Chat.Data.Entities
                 .WithMany(y => y.RecievedMessages)
                 .HasForeignKey(x => x.RecipientFK)
                 .IsRequired();
+            
+            DatabaseSeeder.Seed(modelBuilder);
+            base.OnModelCreating(modelBuilder);
         }
-
         public class ChatDbContextFactory : IDesignTimeDbContextFactory<ChatDbContext>
         {
             public ChatDbContext CreateDbContext(string[] args)
