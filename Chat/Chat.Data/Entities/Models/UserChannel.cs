@@ -6,6 +6,6 @@
         public string Password { get; set; }
         public string Username { get; set; }
         public bool IsAdmin { get; set; } = false;
-        public ICollection<GroupChannel> GroupChannels { get; set; }
+        public ICollection<GroupUser> GroupChannels { get; set; }
     }
 }

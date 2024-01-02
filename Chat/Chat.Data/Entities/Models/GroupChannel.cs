@@ -3,6 +3,6 @@
     public class GroupChannel : MessageChannel
     {
         public string Title { get; set; }
-        public ICollection<UserChannel> Users { get; set; }
+        public ICollection<GroupUser> Users { get; set; }
     }
 }

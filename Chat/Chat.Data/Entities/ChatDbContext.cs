@@ -19,10 +19,23 @@ namespace Chat.Data.Entities
         {
             modelBuilder.Entity<MessageChannel>().UseTptMappingStrategy();
 
-            modelBuilder.Entity<UserChannel>()
-                .HasMany(x => x.GroupChannels)
-                .WithMany(y => y.Users)
-                .UsingEntity(j => j.ToTable("GroupUser"));
+            //modelBuilder.Entity<UserChannel>()
+            //    .HasMany(x => x.GroupChannels)
+            //    .WithMany(y => y.Users)
+            //    .UsingEntity(j => j.ToTable("GroupUser"));
+
+            modelBuilder.Entity<GroupUser>()
+                .HasKey(gu => new { gu.UserChannelId, gu.GroupChannelId });
+
+            modelBuilder.Entity<GroupUser>()
+            .HasOne(g => g.UserChannel)
+            .WithMany(u => u.GroupChannels)
+            .HasForeignKey(gu => gu.UserChannelId);
+
+            modelBuilder.Entity<GroupUser>()
+                .HasOne(g => g.GroupChannel)
+                .WithMany(g => g.Users)
+                .HasForeignKey(gu => gu.GroupChannelId);
 
             modelBuilder.Entity<UserChannel>()
                 .Property(uc => uc.IsAdmin)
