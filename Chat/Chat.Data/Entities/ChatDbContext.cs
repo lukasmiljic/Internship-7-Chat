@@ -14,15 +14,11 @@ namespace Chat.Data.Entities
         public DbSet<MessageChannel> MessageChannels => Set<MessageChannel>();
         public DbSet<GroupChannel> GroupChannels => Set<GroupChannel>();
         public DbSet<UserChannel> UserChannels => Set<UserChannel>();
+        public DbSet<GroupUser> GroupUsers => Set<GroupUser>();
         public DbSet<Message> Message => Set<Message>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<MessageChannel>().UseTptMappingStrategy();
-
-            //modelBuilder.Entity<UserChannel>()
-            //    .HasMany(x => x.GroupChannels)
-            //    .WithMany(y => y.Users)
-            //    .UsingEntity(j => j.ToTable("GroupUser"));
 
             modelBuilder.Entity<GroupUser>()
                 .HasKey(gu => new { gu.UserChannelId, gu.GroupChannelId });
