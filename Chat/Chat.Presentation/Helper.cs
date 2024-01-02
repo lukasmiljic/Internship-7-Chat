@@ -1,5 +1,4 @@
-﻿
-namespace Chat.Presentation
+﻿namespace Chat.Presentation
 {
     public class Helper
     {

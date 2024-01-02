@@ -56,18 +56,11 @@ namespace Chat.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MessageChannelID"));
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("character varying(21)");
-
                     b.HasKey("MessageChannelID");
 
                     b.ToTable("MessageChannels");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("MessageChannel");
-
-                    b.UseTphMappingStrategy();
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("GroupChannelUserChannel", b =>
@@ -93,7 +86,7 @@ namespace Chat.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasDiscriminator().HasValue("GroupChannel");
+                    b.ToTable("GroupChannels");
                 });
 
             modelBuilder.Entity("Chat.Data.Entities.Models.UserChannel", b =>
@@ -115,7 +108,7 @@ namespace Chat.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasDiscriminator().HasValue("UserChannel");
+                    b.ToTable("UserChannels");
                 });
 
             modelBuilder.Entity("Chat.Data.Entities.Models.Message", b =>
@@ -148,6 +141,24 @@ namespace Chat.Data.Migrations
                     b.HasOne("Chat.Data.Entities.Models.UserChannel", null)
                         .WithMany()
                         .HasForeignKey("UsersMessageChannelID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Chat.Data.Entities.Models.GroupChannel", b =>
+                {
+                    b.HasOne("Chat.Data.Entities.Models.MessageChannel", null)
+                        .WithOne()
+                        .HasForeignKey("Chat.Data.Entities.Models.GroupChannel", "MessageChannelID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Chat.Data.Entities.Models.UserChannel", b =>
+                {
+                    b.HasOne("Chat.Data.Entities.Models.MessageChannel", null)
+                        .WithOne()
+                        .HasForeignKey("Chat.Data.Entities.Models.UserChannel", "MessageChannelID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

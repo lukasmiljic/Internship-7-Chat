@@ -26,6 +26,8 @@ namespace Chat.Data.Entities
         //jel mi treba ovo?
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<MessageChannel>().UseTptMappingStrategy();
+
             modelBuilder.Entity<UserChannel>()
                 .HasMany(x => x.GroupChannels)
                 .WithMany(y => y.Users)
@@ -56,7 +58,7 @@ namespace Chat.Data.Entities
 
                 config.Providers
                     .First()
-                    .TryGet("connectionStrings:add:Chat:connectionString", out var connectionString);
+                    .TryGet("connectionStrings:add:ChatDB:connectionString", out var connectionString);
 
                 var options = new DbContextOptionsBuilder<ChatDbContext>()
                     .UseNpgsql(connectionString)

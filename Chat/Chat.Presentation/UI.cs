@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.Json;
-
-namespace Chat.Presentation
+﻿namespace Chat.Presentation
 {
     public class UI
     {
