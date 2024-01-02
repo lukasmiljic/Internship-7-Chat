@@ -1,10 +1,5 @@
 ﻿using Chat.Data.Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chat.Data.Seeds
 {
@@ -52,17 +47,66 @@ namespace Chat.Data.Seeds
                         Username = "dante",
                     }
                 });
+
             builder.Entity<GroupChannel>()
                 .HasData(new List<GroupChannel>()
                 {
                     new GroupChannel()
                     {
                         MessageChannelID = 6,
-                        Title = "DevChannel"
+                        Title = "DevChannel",
                     }
                 });
-            //builder.Entity<GroupUser>()
-            //    .HasData(new List<UserChannel>() { new UserChannel() { } });
+
+            builder.Entity<GroupUser>()
+                .HasData(new List<GroupUser>()
+                {
+                    new GroupUser()
+                    {
+                        GroupChannelId = 6,
+                        UserChannelId = 1,
+                    }
+                });
+
+            builder.Entity<Message>()
+                .HasData(new List<Message>() 
+                {
+                    new Message()
+                    {
+                        SendTime = new DateTime(2024,1,1,12,30,30),
+                        SenderFK = 1,
+                        RecipientFK = 6,
+                        Body = "Test message 1"
+                    },
+                    new Message()
+                    {
+                        SendTime = new DateTime(2024,1,1,12,31,30),
+                        SenderFK = 1,
+                        RecipientFK = 6,
+                        Body = "Test message 2"
+                    },
+                    new Message()
+                    {
+                        SendTime = new DateTime(2024,1,1,12,32,30),
+                        SenderFK = 1,
+                        RecipientFK = 6,
+                        Body = "Test message 3"
+                    },
+                    new Message()
+                    {
+                        SendTime = new DateTime(2024,1,1,12,33,30),
+                        SenderFK = 1,
+                        RecipientFK = 2,
+                        Body = "Private channel test message 1"
+                    },
+                    new Message()
+                    {
+                        SendTime = new DateTime(2024,1,1,12,34,30),
+                        SenderFK = 1,
+                        RecipientFK = 2,
+                        Body = "Private channel test message 2"
+                    }
+                });
         }
     }
 }
