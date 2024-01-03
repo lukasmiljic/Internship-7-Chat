@@ -40,5 +40,12 @@ namespace Chat.Domain.Actions
 
             return valid;
         }
+        public static UserChannel? CreateNewUser(string email, string password)
+        {
+            var user = new UserChannel() { Email = email, Password = password, Username = email };
+            var userChannelRepository = new UserChannelRepository(DbContextFactory.GetDbContext());
+            userChannelRepository.Add(user);
+            return user;
+        }
     }
 }

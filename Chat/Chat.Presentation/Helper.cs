@@ -36,7 +36,7 @@ namespace Chat.Presentation
             Console.Clear();
             switch (errorCode) {
                 case 0:
-                    Console.WriteLine("Greska pri odabiru! Molimo ponovno unesite vrijednost");
+                    Console.WriteLine("Error! Input out of range");
                     break;
             }
             PressAnything();
@@ -128,12 +128,6 @@ namespace Chat.Presentation
             return new string(Enumerable.Repeat(chars, 8)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
-        public static UserChannel? CreateNewUser(string email, string password)
-        {
-            var user = new UserChannel() { Email = email, Password = password, Username = email };
-            var userChannelRepository = new UserChannelRepository(DbContextFactory.GetDbContext());
-            userChannelRepository.Add(user);
-            return user;
-        }
+        
     }
 }

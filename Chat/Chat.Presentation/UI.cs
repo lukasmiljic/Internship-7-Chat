@@ -1,4 +1,5 @@
 ﻿using Chat.Data.Entities.Models;
+using Chat.Domain.Actions;
 
 namespace Chat.Presentation
 {
@@ -101,7 +102,7 @@ namespace Chat.Presentation
                 } while (true);
                 break;
             } while (true);
-            user = Helper.CreateNewUser(email,password);
+            user = UserAuthentication.CreateNewUser(email,password);
             Helper.Greetings(user);
         }
         private static bool ExitApplication()
@@ -116,22 +117,23 @@ namespace Chat.Presentation
             else return false;
         }
 
-        //how do i track who is logged in?
         //main menu
         public static void MainMenu(UserChannel loggedInUser)
         {
-            //admin ima dodatno polje za upravljanje s korisnicima
+            bool adminFlag = loggedInUser.IsAdmin ? true : false;
             var userChoice = -1;
+            int possibleChoices = 3;
             do
             {
                 Console.Clear();
-                Console.WriteLine("Main menu");
+                Console.WriteLine($"Main menu - {loggedInUser.Username}");
                 Console.WriteLine("[1] Group channels");
                 Console.WriteLine("[2] Private messages");
                 Console.WriteLine("[3] Settings");
+                if (adminFlag) { Console.WriteLine("[4] User management"); possibleChoices = 4; }
                 Console.WriteLine("[0] Log out");
 
-                if (!Helper.ValidateInput(ref userChoice, 3))
+                if (!Helper.ValidateInput(ref userChoice, possibleChoices))
                 {
                     Helper.ErrorMessage(0);
                     userChoice = -1;
@@ -150,6 +152,10 @@ namespace Chat.Presentation
 
                     case 3:
                         SettingsSubMenu();
+                        break;
+
+                    case 4:
+                        UserManagmentSubMenu();
                         break;
 
                     case 0:
@@ -381,6 +387,12 @@ namespace Chat.Presentation
             //domain.changemail()
             Console.WriteLine("Successfully changed Password!");
             Helper.PressAnything();
+        }
+
+        //admin
+        private static void UserManagmentSubMenu()
+        {
+            throw new NotImplementedException();
         }
     }
 }
