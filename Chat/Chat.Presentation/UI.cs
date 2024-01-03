@@ -143,7 +143,7 @@ namespace Chat.Presentation
                 switch (userChoice)
                 {
                     case 1:
-                        GroupChannelsSubMenu();
+                        GroupChannelsSubMenu(loggedInUser);
                         break;
 
                     case 2:
@@ -173,7 +173,7 @@ namespace Chat.Presentation
         }
 
         //group messages
-        private static void GroupChannelsSubMenu()
+        private static void GroupChannelsSubMenu(UserChannel user)
         {
             var userChoice = -1;
             do
@@ -195,7 +195,7 @@ namespace Chat.Presentation
                 switch (userChoice)
                 {
                     case 1:
-                        CreateNewGroupScreen();
+                        CreateNewGroupScreen(user);
                         break;
 
                     case 2:
@@ -211,7 +211,7 @@ namespace Chat.Presentation
                 }
             } while (userChoice != 0);
         }
-        private static void CreateNewGroupScreen()
+        private static void CreateNewGroupScreen(UserChannel user)
         {
             string groupTitle;
             bool confirmation;
@@ -224,20 +224,31 @@ namespace Chat.Presentation
                 Console.WriteLine($"Create new group named {groupTitle}?");
                 confirmation = Helper.AreYouSure();
             } while (!confirmation);
-            //create channel and add user
-            //domain.creategroupchannel
-            //domain.addusertogroup
+            GroupChannelActions.CreateGroupChannel(groupTitle, user);
             Console.WriteLine("Successfully created new group!");
             Helper.PressAnything();
         }
+        //private static void EnterGroupScreen()
+        //{
+        //    //modify so it uses /enter command 
+        //    //store user input as string trim last part of said string for groupIdToEnter
+        //    //see https://stackoverflow.com/questions/4603911/extract-the-last-word-from-a-string-using-c-sharp
+        //    //check if part of string is "/enter" if not print error message
+        //    Console.Clear();
+        //    Console.WriteLine("Enter Group Channel\t\t/enter [CHANNEL_ID]\t/exit");
+        //    // print out all the channels that user is not in with the number of users beside it
+        //    //domain.printavailablechannels()
+        //    int groupIdToEnter = 0;
+        //    Helper.EnterNumeric(ref groupIdToEnter);
+        //    //if (domain.entergroupchannel() == false) //check that gropIdToEnter is a valid id
+        //    Console.WriteLine("Successfully joined group channel");
+        //    Helper.PressAnything();
+        //    ViewMessages(groupIdToEnter);
+        //}
         private static void EnterGroupScreen()
         {
-            //modify so it uses /enter command 
-            //store user input as string trim last part of said string for groupIdToEnter
-            //see https://stackoverflow.com/questions/4603911/extract-the-last-word-from-a-string-using-c-sharp
-            //check if part of string is "/enter" if not print error message
             Console.Clear();
-            Console.WriteLine("Enter Group Channel\t\t/enter [CHANNEL_ID]\t/exit");
+            Console.WriteLine("Enter Group Channel");
             // print out all the channels that user is not in with the number of users beside it
             //domain.printavailablechannels()
             int groupIdToEnter = 0;
@@ -247,6 +258,7 @@ namespace Chat.Presentation
             Helper.PressAnything();
             ViewMessages(groupIdToEnter);
         }
+
         private static void AllChannelsScreen()
         { 
             Console.Clear();
