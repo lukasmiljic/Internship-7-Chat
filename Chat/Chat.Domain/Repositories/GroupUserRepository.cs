@@ -9,12 +9,6 @@ namespace Chat.Domain.Repositories
         public GroupUserRepository(ChatDbContext dbContext) : base(dbContext)
         {
         }
-        public ResponseResultType Add(GroupChannel groupChannel)
-        {
-            DbContext.GroupChannels.Add(groupChannel);
-
-            return SaveChanges();
-        }
         public ResponseResultType Add(GroupUser groupUser)
         {
             DbContext.GroupUsers.Add(groupUser);

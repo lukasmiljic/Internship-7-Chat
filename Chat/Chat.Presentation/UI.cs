@@ -199,7 +199,7 @@ namespace Chat.Presentation
                         break;
 
                     case 2:
-                        EnterGroupScreen();
+                        EnterGroupScreen(user);
                         break;
 
                     case 3:
@@ -245,18 +245,20 @@ namespace Chat.Presentation
         //    Helper.PressAnything();
         //    ViewMessages(groupIdToEnter);
         //}
-        private static void EnterGroupScreen()
+        private static void EnterGroupScreen(UserChannel user)
         {
+            string input;
+
             Console.Clear();
             Console.WriteLine("Enter Group Channel");
-            // print out all the channels that user is not in with the number of users beside it
-            //domain.printavailablechannels()
-            int groupIdToEnter = 0;
-            Helper.EnterNumeric(ref groupIdToEnter);
+            if (!Helper.PrintAvailableGroupChannels(user)) return;
+            Console.WriteLine("Enter group channel title to join channel");
+            input = Console.ReadLine(); 
+
             //if (domain.entergroupchannel() == false) //check that gropIdToEnter is a valid id
             Console.WriteLine("Successfully joined group channel");
             Helper.PressAnything();
-            ViewMessages(groupIdToEnter);
+            //ViewMessages(groupIdToEnter);
         }
 
         private static void AllChannelsScreen()

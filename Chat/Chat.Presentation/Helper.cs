@@ -50,7 +50,6 @@ namespace Chat.Presentation
                 PressAnything();
             }
         }
-
         //user authentication
         public static void TimeOut()
         {
@@ -128,6 +127,21 @@ namespace Chat.Presentation
             return new string(Enumerable.Repeat(chars, 8)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
-        
+        public static bool PrintAvailableGroupChannels(UserChannel user)
+        {
+            var userChannelRepository = new UserChannelRepository(DbContextFactory.GetDbContext());
+            var groups = userChannelRepository.PrintUsersGroupChannels(user);
+            if (groups is null)
+            {
+                Console.WriteLine("No available group channels");
+                PressAnything();
+                return false;
+            }
+            foreach( var group in groups)
+            {
+                Console.WriteLine($"{group.Title}");
+            }
+            return true;
+        }
     }
 }

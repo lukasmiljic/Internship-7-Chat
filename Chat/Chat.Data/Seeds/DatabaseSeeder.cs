@@ -111,7 +111,7 @@ namespace Chat.Data.Seeds
                         RecipientFK = 2,
                         Body = "Private channel test message 2"
                     }
-                }) ;
+                });
         }
     }
 }

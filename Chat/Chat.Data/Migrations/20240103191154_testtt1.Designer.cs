@@ -3,6 +3,7 @@ using System;
 using Chat.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Chat.Data.Migrations
 {
     [DbContext(typeof(ChatDbContext))]
-    partial class ChatDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240103191154_testtt1")]
+    partial class testtt1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,7 +63,7 @@ namespace Chat.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("SendTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("SenderFK")
                         .HasColumnType("integer");
@@ -79,7 +82,7 @@ namespace Chat.Data.Migrations
                             MessageID = 1,
                             Body = "Test message 1",
                             RecipientFK = 6,
-                            SendTime = new DateTime(2024, 1, 1, 12, 30, 30, 0, DateTimeKind.Utc),
+                            SendTime = new DateTime(2024, 1, 1, 12, 30, 30, 0, DateTimeKind.Unspecified),
                             SenderFK = 1
                         },
                         new
@@ -87,7 +90,7 @@ namespace Chat.Data.Migrations
                             MessageID = 2,
                             Body = "Test message 2",
                             RecipientFK = 6,
-                            SendTime = new DateTime(2024, 1, 1, 12, 31, 30, 0, DateTimeKind.Utc),
+                            SendTime = new DateTime(2024, 1, 1, 12, 31, 30, 0, DateTimeKind.Unspecified),
                             SenderFK = 1
                         },
                         new
@@ -95,7 +98,7 @@ namespace Chat.Data.Migrations
                             MessageID = 3,
                             Body = "Test message 3",
                             RecipientFK = 6,
-                            SendTime = new DateTime(2024, 1, 1, 12, 32, 30, 0, DateTimeKind.Utc),
+                            SendTime = new DateTime(2024, 1, 1, 12, 32, 30, 0, DateTimeKind.Unspecified),
                             SenderFK = 1
                         },
                         new
@@ -103,7 +106,7 @@ namespace Chat.Data.Migrations
                             MessageID = 4,
                             Body = "Private channel test message 1",
                             RecipientFK = 2,
-                            SendTime = new DateTime(2024, 1, 1, 12, 33, 30, 0, DateTimeKind.Utc),
+                            SendTime = new DateTime(2024, 1, 1, 12, 33, 30, 0, DateTimeKind.Unspecified),
                             SenderFK = 1
                         },
                         new
@@ -111,7 +114,7 @@ namespace Chat.Data.Migrations
                             MessageID = 5,
                             Body = "Private channel test message 2",
                             RecipientFK = 2,
-                            SendTime = new DateTime(2024, 1, 1, 12, 34, 30, 0, DateTimeKind.Utc),
+                            SendTime = new DateTime(2024, 1, 1, 12, 34, 30, 0, DateTimeKind.Unspecified),
                             SenderFK = 1
                         });
                 });
