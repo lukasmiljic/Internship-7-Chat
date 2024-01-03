@@ -12,7 +12,13 @@ namespace Chat.Domain.Actions
             var groupChannelRepository = new GroupChannelRepository(DbContextFactory.GetDbContext());
             groupChannelRepository.Add(group);
             var groupUserRepository = new GroupUserRepository(DbContextFactory.GetDbContext());
-            groupUserRepository.Add(new GroupUser() { GroupChannel = group, GroupChannelId = group.MessageChannelID, UserChannel = user, UserChannelId = user.MessageChannelID});
+            groupUserRepository.Add(new GroupUser() 
+            {   
+                //GroupChannel = group, 
+                GroupChannelId = group.MessageChannelID, 
+                //UserChannel = user, 
+                UserChannelId = user.MessageChannelID
+            });
         }
     }
 }
