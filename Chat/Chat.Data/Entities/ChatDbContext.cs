@@ -10,6 +10,7 @@ namespace Chat.Data.Entities
     {
         public ChatDbContext(DbContextOptions options) : base(options)
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
         public DbSet<MessageChannel> MessageChannels => Set<MessageChannel>();
         public DbSet<GroupChannel> GroupChannels => Set<GroupChannel>();
