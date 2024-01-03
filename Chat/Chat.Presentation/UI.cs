@@ -1,7 +1,4 @@
 ﻿using Chat.Data.Entities.Models;
-using Chat.Domain.Repositories;
-using Chat.Domain.Factories;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Chat.Presentation
 {
@@ -46,7 +43,7 @@ namespace Chat.Presentation
         private static UserChannel? LoginScreen()
         {
             string inputEmail, inputPassword;
-            UserChannel user;
+            UserChannel user = null;
             do
             {
                 Console.Clear();
@@ -55,7 +52,7 @@ namespace Chat.Presentation
                 {
                     Console.Write("Email: ");
                     inputEmail = Console.ReadLine();
-                    user = Helper.LoginVerifyEmailAndPrintMsg(inputEmail);
+                    Helper.LoginVerifyEmailAndPrintMsg(inputEmail, ref user);
                     if (user != null) break;
                 } while (true);
 
@@ -69,23 +66,12 @@ namespace Chat.Presentation
         }
         private static void RegisterScreen()
         {
-            //Ukoliko odabere registraciju, od korisnika se očekuje unos maila,
-            //nove i potvrdne lozinke koje moraju biti identične te kao treći
-            //korak generira se i ispiše random string (sastavljena od barem
-            //jednog slova i jedne brojke) koja služi kao captcha da se ne
-            //registrira bot. Korisnik mora ponoviti unos ispisane generirane
-            //riječi. Potrebno je provjeriti ispravnost mail adrese i provjeriti
-            //da ne postoji vec neki korisnik s istom mail adresom
-            string email;
-            string password;
-            string captcha = "some txt";
-            string input;
-            bool inputSuccess;
+            string email, password, captcha, input;
+            UserChannel user;
             do
             {
                 Console.Clear();
                 Console.WriteLine("Register");
-
                 do
                 {
                     Console.Write("Email: ");
@@ -107,15 +93,16 @@ namespace Chat.Presentation
                 } while (true);
                 do
                 {
-                    //generate rndm string for captcha
-                    Console.Write($"Enter captcha[{captcha}]: ");
+                    captcha = Helper.GenerateCaptcha();
+                    Console.Write($"Enter captcha [{captcha}]: ");
                     input = Console.ReadLine();
                     if (captcha == input) break;
                     Console.WriteLine("Captcha doesn't match!");
                 } while (true);
                 break;
             } while (true);
-            Console.Clear();
+            user = Helper.CreateNewUser(email,password);
+            Helper.Greetings(user);
         }
         private static bool ExitApplication()
         {

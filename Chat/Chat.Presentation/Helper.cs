@@ -11,7 +11,7 @@ namespace Chat.Presentation
         //general
         public static void PressAnything() {
             Console.WriteLine("Press anything to continue...");
-            Console.ReadKey();
+            Console.ReadKey(true);
         }
         public static bool AreYouSure() {
             do {
@@ -67,33 +67,33 @@ namespace Chat.Presentation
             }
             return true;
         }
-        public static bool RegisterVerifyEmailAndPrintMsg(string email)
+        public static bool RegisterVerifyEmailAndPrintMsg(string inputEmail)
         {
-            int returnValue = 0;
-            //domain.VerifyEmail(inputEmail)
-            switch (returnValue)
+            switch (UserAuthentication.ValidateEmail(inputEmail))
             {
-                case 1:
-                    //email length < 1 cant leave email field empty
+                case EmailResultType.NotFound:
+                    return true;
+
+                case EmailResultType.InvalidFormat:
+                    Console.WriteLine("Error! Invalid email format");
+                    PressAnything();
                     break;
 
-                case 2:
-                    //email doesnt  match pattern text@text.com
-                    break;
-
-                case 3:
-                    //user with that email already exists
+                case EmailResultType.InvalidLength:
+                    Console.WriteLine("Error! Email field cant be empty");
+                    PressAnything();
                     break;
 
                 default:
-                    return true;
+                    Console.WriteLine("Error! Email is already taken");
+                    PressAnything();
+                    break;
             }
             return false;
         }
-        public static UserChannel? LoginVerifyEmailAndPrintMsg(string inputEmail)
+        public static UserChannel? LoginVerifyEmailAndPrintMsg(string inputEmail, ref UserChannel user)
         {
-            var userChannelRepository = new UserChannelRepository(DbContextFactory.GetDbContext());
-            switch (UserAuthentication.ValidateEmail(inputEmail))
+            switch (UserAuthentication.ValidateEmail(inputEmail, ref user))
             {
                 case EmailResultType.NotFound:
                     Console.WriteLine($"Error! No user with email {inputEmail}");
@@ -111,7 +111,7 @@ namespace Chat.Presentation
                     break;
 
                 default:
-                    return userChannelRepository.GetUserByEmail(inputEmail);
+                    return user;
             }
             return null;
         }
@@ -120,6 +120,20 @@ namespace Chat.Presentation
             Console.Clear();
             Console.WriteLine($"Welcome {user.Username}!");
             PressAnything();
+        }
+        public static string GenerateCaptcha()
+        {
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, 8)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        public static UserChannel? CreateNewUser(string email, string password)
+        {
+            var user = new UserChannel() { Email = email, Password = password, Username = email };
+            var userChannelRepository = new UserChannelRepository(DbContextFactory.GetDbContext());
+            userChannelRepository.Add(user);
+            return user;
         }
     }
 }
