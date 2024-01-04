@@ -175,10 +175,10 @@ namespace Chat.Presentation
             }
             return;
         }
-        public static void NewMessage(MessageChannel reciever, UserChannel sender, string message)
+        public static void NewMessage(MessageChannel recipient, UserChannel sender, string message)
         {
             var messageRepository = new MessageRepository(DbContextFactory.GetDbContext());
-            messageRepository.Add(new Message() { Body = message, RecipientFK = reciever.MessageChannelID, SenderFK = sender.MessageChannelID});
+            messageRepository.Add(new Message() { Body = message, RecipientFK = recipient.MessageChannelID, SenderFK = sender.MessageChannelID});
         }
 
         public static List<UserChannel>? PrintAllUsers()
@@ -198,12 +198,16 @@ namespace Chat.Presentation
             var messages = userChannelRepository.GetMessagesWithUser(recipient, sender);
             if (messages is null)
             {
-                Console.WriteLine("\nNo messages yet");
+                Console.WriteLine("No messages yet");
                 return;
             }
             foreach (var message in messages)
             {
-                Console.WriteLine($"{message.Body}");
+                if (message.SenderFK == sender.MessageChannelID)
+                    Console.Write($"{sender.Username}");
+                else
+                    Console.Write($"{recipient.Username}");
+                Console.Write($" {message.SendTime.ToString("yyy:MM:dd:H:m")}\n\t{message.Body}\n\n");
             }
             return;
         }

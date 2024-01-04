@@ -70,14 +70,45 @@ namespace Chat.Domain.Repositories
             return DbContext.UserChannels.ToList();
         }
 
-        public List<Message>? GetMessagesWithUser (UserChannel recipient, UserChannel sender)
+        public List<Message>? GetMessagesWithUser(UserChannel recipient, UserChannel sender)
         {
-            var messages = DbContext.Message
+            var sentMessages = DbContext.Message
                 .Where(s => s.SenderFK == sender.MessageChannelID)
                 .Where(r => r.RecipientFK == recipient.MessageChannelID)
                 .ToList();
+            
+            var recievedMessages = DbContext.Message
+                .Where(s => s.SenderFK == recipient.MessageChannelID)
+                .Where(r => r.RecipientFK == sender.MessageChannelID)
+                .ToList();
+
+            var messages = sentMessages.Concat(recievedMessages).OrderBy(message => message.SendTime).ToList();
 
             return messages;
         }
+
+        //public List<Message>? GetMessagesWithUser(UserChannel recipient, UserChannel sender)
+        //{
+        //    List<Message>? messages = null;
+        //    foreach (var message in recipient.RecievedMessages)
+        //    {
+        //        if (message.SenderFK == sender.MessageChannelID)
+        //            messages.Add(message);
+        //    }
+        //    foreach (var message in sender.RecievedMessages)
+        //    {
+        //        if (message.SenderFK == recipient.MessageChannelID)
+        //            messages.Add(message);
+        //    }
+        //    if (messages == null) return null;
+        //    messages.Sort((x, y) => x.SendTime.CompareTo(y.SendTime));
+        //    return messages;
+        //}
     }
 }
+
+
+
+
+
+

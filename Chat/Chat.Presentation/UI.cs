@@ -325,6 +325,7 @@ namespace Chat.Presentation
         {
             string input;
             UserChannel targetUser;
+            Console.Clear();
             Console.WriteLine("New Message\t\t/exit");
             var users = Helper.PrintAllUsers();
             do
@@ -347,7 +348,7 @@ namespace Chat.Presentation
             do
             {
                 Console.Clear();
-                Console.WriteLine($"{user.Username}\t\t/exit");
+                Console.WriteLine($"Private messages - {user.Username}\t\t\t/exit");
                 Helper.PrintPrivateMessages(user, loggedinUser);
                 Console.Write("New message: ");
                 input = Console.ReadLine();
