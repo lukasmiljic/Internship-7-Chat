@@ -7,5 +7,6 @@
         public string Username { get; set; }
         public bool IsAdmin { get; set; } = false;
         public ICollection<GroupUser> GroupChannels { get; set; } = null!;
+        public ICollection<Message> SentMessages { get; set; } = new List<Message>();
     }
 }

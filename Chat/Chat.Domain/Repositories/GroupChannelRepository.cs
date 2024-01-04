@@ -1,5 +1,6 @@
 ﻿using Chat.Data.Entities;
 using Chat.Data.Entities.Models;
+using Chat.Domain.Models;
 using TodoApp.Domain.Enums;
 
 namespace Chat.Domain.Repositories
@@ -35,6 +36,21 @@ namespace Chat.Domain.Repositories
             groupChannelToUpdate.Title = groupChannel.Title;
 
             return SaveChanges();
+        }
+
+        public List<Message>? GetMessagesGroupChannels(GroupChannel groupChannel)
+        {
+            List<Message>? messages = null;
+            //foreach (var message in groupChannel.SentMessages)
+            //{
+            //    messages.Add(message);
+            //}
+            foreach (var message in groupChannel.RecievedMessages)
+            {
+                messages.Add(message);
+            }
+            //messages.Sort((x, y) => x.SendTime.CompareTo(y.SendTime));
+            return messages;
         }
     }
 }

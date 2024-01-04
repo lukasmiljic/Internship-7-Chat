@@ -231,6 +231,7 @@ namespace Chat.Presentation
         private static void EnterGroupScreen(UserChannel user)
         {
             string input;
+            GroupChannel targetGroup = null;
 
             Console.Clear();
             Console.WriteLine("Enter Group Channel");
@@ -240,7 +241,8 @@ namespace Chat.Presentation
             {
                 Console.WriteLine("Enter group channel title to join channel");
                 input = Console.ReadLine();
-                if (!GroupChannelActions.AddUserToGroup(user, groups, input))
+                targetGroup = GroupChannelActions.AddUserToGroup(user, groups, input);
+                if (targetGroup is null)
                 {
                     Console.WriteLine($"Error! {input} is not a valid group title");
                     continue;
@@ -249,22 +251,38 @@ namespace Chat.Presentation
                 break;
             } while (true);
             Helper.PressAnything();
-            //ViewMessages(groupIdToEnter);
+            ViewGroupMessages(targetGroup, user);
         }
-
         private static void AllChannelsScreen(UserChannel user)
-        { 
+        {
+            GroupChannel targetGroup = null;
+            
             Console.Clear();
             Console.WriteLine("All Group Channels");
-            Helper.PrintUsersGroupChannels(user);
-            Helper.PressAnything();
+            var groups = Helper.PrintUsersGroupChannels(user);
+            do
+            {
+                Console.WriteLine("Enter group channel title to view messages");
+                string input = Console.ReadLine();
+                targetGroup = groups.FirstOrDefault(x => x.Title == input);
+                if (targetGroup is not null) break;
+                else Console.WriteLine($"Error! {input} is not a valid group title");
+            } while (true);
+            ViewGroupMessages(targetGroup, user);
         }
-        private static void ViewMessages(int channelID)
+        private static void ViewGroupMessages(GroupChannel groupChannel, UserChannel user)
         {
-            //Console.Write("${channelID.Title} \t\t/exit")
-            //domain.ViewMessages(channelId)
-            Console.Write("New message: ");
-            //similar code as in entergroup for /enter
+            string input;
+            do
+            {
+                Console.Clear();
+                Console.Write($"{groupChannel.Title}\t\t/exit");
+                Helper.PrintGroupMessages(groupChannel);
+                Console.Write("New message: ");
+                input = Console.ReadLine();
+                if (input == "/exit") break;
+                Helper.NewMessage(groupChannel, user, input);
+            } while (true);
         }
         
         //private messages

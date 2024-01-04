@@ -9,7 +9,7 @@ namespace Chat.Data.Entities.Models
         public DateTime SendTime { get; set; } = DateTime.Now;
         [ForeignKey("MessageChannel")]
         public int SenderFK { get; set; }
-        public MessageChannel Sender { get; set; }
+        public UserChannel Sender { get; set; }
         [ForeignKey("MessageChannel")]
         public int RecipientFK { get; set; }
         public MessageChannel Recipient { get; set; }

@@ -3,7 +3,7 @@
     public class MessageChannel
     {
         public int MessageChannelID { get; set; }
-        public ICollection<Message> SentMessages { get; set; }
-        public ICollection<Message> RecievedMessages { get; set; }
+        
+        public ICollection<Message> RecievedMessages { get; set; } = new List<Message>();
     }
 }

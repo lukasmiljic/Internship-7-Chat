@@ -160,5 +160,25 @@ namespace Chat.Presentation
             return groups;
         }
 
+        public static void PrintGroupMessages(GroupChannel groupChannel)
+        {
+            var groupChannelRepository = new GroupChannelRepository(DbContextFactory.GetDbContext());
+            var messages = groupChannelRepository.GetMessagesGroupChannels(groupChannel);
+            if (messages is null)
+            {
+                Console.WriteLine("\nNo messages yet");
+                return;
+            }
+            foreach (var message in messages)
+            {
+                Console.WriteLine($"{message.Body}");
+            }
+            return;
+        }
+        public static void NewMessage(MessageChannel reciever, UserChannel sender, string message)
+        {
+            var messageRepository = new MessageRepository(DbContextFactory.GetDbContext());
+            messageRepository.Add(new Message() { Body = message, RecipientFK = reciever.MessageChannelID, SenderFK = sender.MessageChannelID});
+        }
     }
 }
