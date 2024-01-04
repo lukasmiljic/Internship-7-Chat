@@ -153,7 +153,7 @@ namespace Chat.Presentation
                         break;
 
                     case 3:
-                        SettingsSubMenu();
+                        SettingsSubMenu(loggedInUser);
                         break;
 
                     case 4:
@@ -364,7 +364,7 @@ namespace Chat.Presentation
         }
 
         //settings
-        private static void SettingsSubMenu()
+        private static void SettingsSubMenu(UserChannel user)
         {
             var userChoice = -1;
             do
@@ -389,7 +389,7 @@ namespace Chat.Presentation
                         break;
 
                     case 2:
-                        ChangeEmailScreen();
+                        ChangeEmailScreen(user);
                         break;
 
                     default:
@@ -397,10 +397,10 @@ namespace Chat.Presentation
                 }
             } while (userChoice != 0);
         }
-        private static void ChangeEmailScreen()
+        private static void ChangeEmailScreen(UserChannel user)
         {
             Console.WriteLine("Change Email");
-            //Console.WriteLine($"Old mail: {user.mail}")
+            Console.WriteLine($"Old mail: {user.Email}");
             string newMail;
             do
             {
@@ -411,18 +411,22 @@ namespace Chat.Presentation
             do
             {
                 Console.Write("Password : ");
-                //if(user.password == console.readline()) break;
+                if (user.Password != Console.ReadLine())
+                {
+                    Console.WriteLine("Error! Wrong password");
+                    continue;
+                }
                 break;
             } while (true);
             if (!Helper.AreYouSure()) return;
-            //domain.changemail()
+            Helper.UpdateUserEmail(user, newMail);
             Console.WriteLine("Successfully changed Email!");
             Helper.PressAnything();
         }
-        private static void ChangePasswordScreen()
+        private static void ChangePasswordScreen(UserChannel user)
         {
             Console.WriteLine("Change Password");
-            //Console.WriteLine($"Old mail: {user.mail}")
+            Console.WriteLine($"Old mail: {user.Email}")
             string newPassword;
             do
             {
@@ -433,11 +437,15 @@ namespace Chat.Presentation
             do
             {
                 Console.Write("Old Password : ");
-                //if(user.password == console.readline()) break;
+                if (user.Password == Console.ReadLine())
+                {
+                    Console.WriteLine("Error! Wrong password");
+                    break;
+                }
                 break;
             } while (true);
             if (!Helper.AreYouSure()) return;
-            //domain.changemail()
+            Helper.UpdateUserPassword(user, newPassword);
             Console.WriteLine("Successfully changed Password!");
             Helper.PressAnything();
         }

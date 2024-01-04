@@ -211,5 +211,20 @@ namespace Chat.Presentation
             }
             return;
         }
+
+        public static void UpdateUserEmail(UserChannel user, string newMail)
+        {
+            var userRepository = new UserChannelRepository(DbContextFactory.GetDbContext());
+            var updateUser = user;
+            updateUser.Email = newMail;
+            userRepository.Update(updateUser, user.MessageChannelID);
+        }
+        public static void UpdateUserPassword(UserChannel user, string newPassword)
+        {
+            var userRepository = new UserChannelRepository(DbContextFactory.GetDbContext());
+            var updateUser = user;
+            updateUser.Password = newPassword;
+            userRepository.Update(updateUser, user.MessageChannelID);
+        }
     }
 }
