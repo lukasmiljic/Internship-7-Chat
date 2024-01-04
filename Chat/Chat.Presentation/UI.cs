@@ -258,14 +258,15 @@ namespace Chat.Presentation
         private static void AllChannelsScreen(UserChannel user)
         {
             GroupChannel targetGroup = null;
-
             Console.Clear();
-            Console.WriteLine("All Group Channels");
+            Console.WriteLine("All Group Channels\t\t\t/exit");
             var groups = Helper.PrintUsersGroupChannels(user);
+            if (groups is null) return;
             do
             {
                 Console.WriteLine("Enter group channel title to view messages");
                 string input = Console.ReadLine();
+                if (input == "/exit") return;
                 targetGroup = groups.FirstOrDefault(x => x.Title == input);
                 if (targetGroup is not null) break;
                 else Console.WriteLine($"Error! {input} is not a valid group title");
@@ -472,6 +473,8 @@ namespace Chat.Presentation
                     continue;
                 }
 
+                if (userChoice == 0) return;
+
                 Console.Clear();
                 var users = Helper.PrintAllUsers();
                 UserChannel targetUser;
@@ -505,7 +508,7 @@ namespace Chat.Presentation
                     case 2:
                         Console.Write("New password: ");
                         string newPassword = Console.ReadLine();
-                        Console.WriteLine($"Change {targetUser} password?");
+                        Console.WriteLine($"Change {targetUser.Username} password?");
                         if (Helper.AreYouSure())
                         {
                             Helper.UpdateUserPassword(targetUser, newPassword);
@@ -519,7 +522,7 @@ namespace Chat.Presentation
                     case 3:
                         Console.Write("New email: ");
                         string newEmail = Console.ReadLine();
-                        Console.WriteLine($"Change {targetUser} email?");
+                        Console.WriteLine($"Change {targetUser.Username} email?");
                         if (Helper.AreYouSure())
                         {
                             Helper.UpdateUserEmail(targetUser, newEmail);
