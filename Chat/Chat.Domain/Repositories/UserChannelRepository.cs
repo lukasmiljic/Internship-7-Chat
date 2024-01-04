@@ -64,5 +64,20 @@ namespace Chat.Domain.Repositories
 
             return groups;
         }
+
+        public List<UserChannel>? GetAllUsers()
+        {
+            return DbContext.UserChannels.ToList();
+        }
+
+        public List<Message>? GetMessagesWithUser (UserChannel recipient, UserChannel sender)
+        {
+            var messages = DbContext.Message
+                .Where(s => s.SenderFK == sender.MessageChannelID)
+                .Where(r => r.RecipientFK == recipient.MessageChannelID)
+                .ToList();
+
+            return messages;
+        }
     }
 }

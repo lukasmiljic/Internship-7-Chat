@@ -166,7 +166,7 @@ namespace Chat.Presentation
             var messages = groupChannelRepository.GetMessagesGroupChannels(groupChannel);
             if (messages is null)
             {
-                Console.WriteLine("\nNo messages yet");
+                Console.WriteLine("sNo messages yet");
                 return;
             }
             foreach (var message in messages)
@@ -179,6 +179,33 @@ namespace Chat.Presentation
         {
             var messageRepository = new MessageRepository(DbContextFactory.GetDbContext());
             messageRepository.Add(new Message() { Body = message, RecipientFK = reciever.MessageChannelID, SenderFK = sender.MessageChannelID});
+        }
+
+        public static List<UserChannel>? PrintAllUsers()
+        {
+            var userChannelRepository = new UserChannelRepository(DbContextFactory.GetDbContext());
+            var users = userChannelRepository.GetAllUsers();
+            foreach (var user in users)
+            {
+                Console.WriteLine($"{user.Username}");
+            }
+            return users;
+        }
+
+        public static void PrintPrivateMessages(UserChannel recipient, UserChannel sender)
+        {
+            var userChannelRepository = new UserChannelRepository(DbContextFactory.GetDbContext());
+            var messages = userChannelRepository.GetMessagesWithUser(recipient, sender);
+            if (messages is null)
+            {
+                Console.WriteLine("\nNo messages yet");
+                return;
+            }
+            foreach (var message in messages)
+            {
+                Console.WriteLine($"{message.Body}");
+            }
+            return;
         }
     }
 }

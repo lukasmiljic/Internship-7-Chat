@@ -1,6 +1,5 @@
 ﻿using Chat.Data.Entities;
 using Chat.Data.Entities.Models;
-using Chat.Domain.Models;
 using TodoApp.Domain.Enums;
 
 namespace Chat.Domain.Repositories

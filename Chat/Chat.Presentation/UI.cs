@@ -1,5 +1,7 @@
 ﻿using Chat.Data.Entities.Models;
 using Chat.Domain.Actions;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
+using System.Text.RegularExpressions;
 
 namespace Chat.Presentation
 {
@@ -147,7 +149,7 @@ namespace Chat.Presentation
                         break;
 
                     case 2:
-                        PrivateMessagesSubMenu();
+                        PrivateMessagesSubMenu(loggedInUser);
                         break;
 
                     case 3:
@@ -276,7 +278,7 @@ namespace Chat.Presentation
             do
             {
                 Console.Clear();
-                Console.Write($"{groupChannel.Title}\t\t/exit");
+                Console.WriteLine($"{groupChannel.Title}\t\t/exit");
                 Helper.PrintGroupMessages(groupChannel);
                 Console.Write("New message: ");
                 input = Console.ReadLine();
@@ -286,7 +288,7 @@ namespace Chat.Presentation
         }
         
         //private messages
-        private static void PrivateMessagesSubMenu()
+        private static void PrivateMessagesSubMenu(UserChannel user)
         {
             var userChoice = -1;
             do
@@ -307,7 +309,7 @@ namespace Chat.Presentation
                 switch (userChoice)
                 {
                     case 1:
-                        NewMessageScreen();
+                        NewMessageScreen(user);
                         break;
 
                     case 2:
@@ -319,12 +321,39 @@ namespace Chat.Presentation
                 }
             } while (userChoice != 0);
         }
-        private static void NewMessageScreen()
+        private static void NewMessageScreen(UserChannel user)
         {
-            Console.WriteLine("New Message\t\t/enter [USER_ID]\t/exit");
-            //domain.allusers() //print out every user
-            //similar code to entergroupscreen()
-            //call viewmessages() after getting userid
+            string input;
+            UserChannel targetUser;
+            Console.WriteLine("New Message\t\t/exit");
+            var users = Helper.PrintAllUsers();
+            do
+            {
+                Console.WriteLine("Enter username to view messages with that user");
+                input = Console.ReadLine();
+                targetUser = users.FirstOrDefault(x => x.Username == input);
+                if (targetUser is not null) break;
+                else
+                {
+                    Console.WriteLine($"Error! {input} is not a valid username");
+                    Helper.PressAnything();
+                }
+            } while (true);
+            ViewPrivateMessages(targetUser, user);
+            }
+        private static void ViewPrivateMessages(UserChannel user, UserChannel loggedinUser)
+        {
+            string input;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine($"{user.Username}\t\t/exit");
+                Helper.PrintPrivateMessages(user, loggedinUser);
+                Console.Write("New message: ");
+                input = Console.ReadLine();
+                if (input == "/exit") break;
+                Helper.NewMessage(user, loggedinUser, input);
+            } while (true);
         }
         private static void AllChats()
         {
