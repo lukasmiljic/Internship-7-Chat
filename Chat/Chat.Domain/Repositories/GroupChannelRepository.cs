@@ -37,18 +37,34 @@ namespace Chat.Domain.Repositories
             return SaveChanges();
         }
 
-        public List<Message>? GetMessagesGroupChannels(GroupChannel groupChannel)
+        //public List<Message>? GetMessagesGroupChannels(GroupChannel groupChannel)
+        //{
+        //    List<Message>? messages = null;
+        //    //foreach (var message in groupChannel.SentMessages)
+        //    //{
+        //    //    messages.Add(message);
+        //    //}
+        //    foreach (var message in groupChannel.RecievedMessages)
+        //    {
+        //        messages.Add(message);
+        //    }
+        //    //messages.Sort((x, y) => x.SendTime.CompareTo(y.SendTime));
+        //    return messages;
+        //}
+
+        public List<Message>? GetMessagesWithGroup(GroupChannel group)
         {
-            List<Message>? messages = null;
-            //foreach (var message in groupChannel.SentMessages)
-            //{
-            //    messages.Add(message);
-            //}
-            foreach (var message in groupChannel.RecievedMessages)
-            {
-                messages.Add(message);
-            }
-            //messages.Sort((x, y) => x.SendTime.CompareTo(y.SendTime));
+            //var sentMessages = DbContext.Message
+            //    .Where(s => s.SenderFK == sender.MessageChannelID)
+            //    .Where(r => r.RecipientFK == recipient.MessageChannelID)
+            //    .ToList();
+
+            var messages = DbContext.Message
+                .Where(r => r.RecipientFK == group.MessageChannelID)
+                .ToList();
+
+            //var messages = sentMessages.Concat(recievedMessages).OrderBy(message => message.SendTime).ToList();
+
             return messages;
         }
     }

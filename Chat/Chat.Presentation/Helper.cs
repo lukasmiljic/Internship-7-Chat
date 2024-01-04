@@ -163,10 +163,10 @@ namespace Chat.Presentation
         public static void PrintGroupMessages(GroupChannel groupChannel)
         {
             var groupChannelRepository = new GroupChannelRepository(DbContextFactory.GetDbContext());
-            var messages = groupChannelRepository.GetMessagesGroupChannels(groupChannel);
+            var messages = groupChannelRepository.GetMessagesWithGroup(groupChannel);
             if (messages is null)
             {
-                Console.WriteLine("sNo messages yet");
+                Console.WriteLine("No messages yet");
                 return;
             }
             foreach (var message in messages)

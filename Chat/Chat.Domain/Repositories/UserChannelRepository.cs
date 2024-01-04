@@ -87,6 +87,7 @@ namespace Chat.Domain.Repositories
             return messages;
         }
 
+        //why doesn't this work?
         //public List<Message>? GetMessagesWithUser(UserChannel recipient, UserChannel sender)
         //{
         //    List<Message>? messages = null;
