@@ -127,21 +127,38 @@ namespace Chat.Presentation
             return new string(Enumerable.Repeat(chars, 8)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
-        public static bool PrintAvailableGroupChannels(UserChannel user)
+        public static List<GroupChannel> PrintAvailableGroupChannels(UserChannel user)
         {
             var userChannelRepository = new UserChannelRepository(DbContextFactory.GetDbContext());
-            var groups = userChannelRepository.PrintUsersGroupChannels(user);
+            var groups = userChannelRepository.GetUsersAvailableGroupChannels(user);
             if (groups is null)
             {
                 Console.WriteLine("No available group channels");
                 PressAnything();
-                return false;
+                return null;
             }
             foreach( var group in groups)
             {
                 Console.WriteLine($"{group.Title}");
             }
-            return true;
+            return groups;
         }
+        public static List<GroupChannel> PrintUsersGroupChannels(UserChannel user)
+        {
+            var userChannelRepository = new UserChannelRepository(DbContextFactory.GetDbContext());
+            var groups = userChannelRepository.GetUsersGroupChannels(user);
+            if (groups is null)
+            {
+                Console.WriteLine("User is not in any group channels");
+                PressAnything();
+                return null;
+            }
+            foreach (var group in groups)
+            {
+                Console.WriteLine($"{group.Title}");
+            }
+            return groups;
+        }
+
     }
 }

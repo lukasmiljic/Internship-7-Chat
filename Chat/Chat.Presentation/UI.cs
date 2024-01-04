@@ -203,7 +203,7 @@ namespace Chat.Presentation
                         break;
 
                     case 3:
-                        AllChannelsScreen();
+                        AllChannelsScreen(user);
                         break;
 
                     default:
@@ -228,44 +228,35 @@ namespace Chat.Presentation
             Console.WriteLine("Successfully created new group!");
             Helper.PressAnything();
         }
-        //private static void EnterGroupScreen()
-        //{
-        //    //modify so it uses /enter command 
-        //    //store user input as string trim last part of said string for groupIdToEnter
-        //    //see https://stackoverflow.com/questions/4603911/extract-the-last-word-from-a-string-using-c-sharp
-        //    //check if part of string is "/enter" if not print error message
-        //    Console.Clear();
-        //    Console.WriteLine("Enter Group Channel\t\t/enter [CHANNEL_ID]\t/exit");
-        //    // print out all the channels that user is not in with the number of users beside it
-        //    //domain.printavailablechannels()
-        //    int groupIdToEnter = 0;
-        //    Helper.EnterNumeric(ref groupIdToEnter);
-        //    //if (domain.entergroupchannel() == false) //check that gropIdToEnter is a valid id
-        //    Console.WriteLine("Successfully joined group channel");
-        //    Helper.PressAnything();
-        //    ViewMessages(groupIdToEnter);
-        //}
         private static void EnterGroupScreen(UserChannel user)
         {
             string input;
 
             Console.Clear();
             Console.WriteLine("Enter Group Channel");
-            if (!Helper.PrintAvailableGroupChannels(user)) return;
-            Console.WriteLine("Enter group channel title to join channel");
-            input = Console.ReadLine(); 
-
-            //if (domain.entergroupchannel() == false) //check that gropIdToEnter is a valid id
-            Console.WriteLine("Successfully joined group channel");
+            var groups = Helper.PrintAvailableGroupChannels(user);
+            if (groups is null) return;
+            do
+            {
+                Console.WriteLine("Enter group channel title to join channel");
+                input = Console.ReadLine();
+                if (!GroupChannelActions.AddUserToGroup(user, groups, input))
+                {
+                    Console.WriteLine($"Error! {input} is not a valid group title");
+                    continue;
+                }
+                else Console.WriteLine("Successfully joined group channel");
+                break;
+            } while (true);
             Helper.PressAnything();
             //ViewMessages(groupIdToEnter);
         }
 
-        private static void AllChannelsScreen()
+        private static void AllChannelsScreen(UserChannel user)
         { 
             Console.Clear();
             Console.WriteLine("All Group Channels");
-            //domain.printusersgroups //print all the group channels that the user is in
+            Helper.PrintUsersGroupChannels(user);
             Helper.PressAnything();
         }
         private static void ViewMessages(int channelID)

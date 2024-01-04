@@ -44,7 +44,7 @@ namespace Chat.Domain.Repositories
             if (!DbContext.UserChannels.Any(x => x.Email == email)) return null;
             else return DbContext.UserChannels.First(x => x.Email == email);
         }
-        public List<GroupChannel>? PrintUsersGroupChannels(UserChannel user)
+        public List<GroupChannel>? GetUsersAvailableGroupChannels(UserChannel user)
         {
             var groups = DbContext.GroupChannels
                 .Where(g => !g.Users.Any(gu => gu.UserChannelId == user.MessageChannelID))
@@ -53,11 +53,16 @@ namespace Chat.Domain.Repositories
             if (groups.Count() == 0) return null;
 
             return groups;
-            //foreach (var group in user.GroupChannels)
-            //{
-            //    Console.WriteLine($"[{group.GroupChannel.MessageChannelID}] {group.GroupChannel.Title}");
-            //}
-            //return true;
+        }
+        public List<GroupChannel>? GetUsersGroupChannels(UserChannel user)
+        {
+            var groups = DbContext.GroupChannels
+                .Where(g => g.Users.Any(gu => gu.UserChannelId == user.MessageChannelID))
+                .ToList();
+
+            if (groups.Count() == 0) return null;
+
+            return groups;
         }
     }
 }
