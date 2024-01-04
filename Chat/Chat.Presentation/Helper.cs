@@ -226,5 +226,13 @@ namespace Chat.Presentation
             updateUser.Password = newPassword;
             userRepository.Update(updateUser, user.MessageChannelID);
         }
+
+        public static void PromoteUserToAdmin(UserChannel user)
+        {
+            var userRepository = new UserChannelRepository(DbContextFactory.GetDbContext());
+            var updateUser = user;
+            updateUser.IsAdmin = true;
+            userRepository.Update(updateUser, user.MessageChannelID);
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Chat.Data.Entities.Models;
 using Chat.Domain.Actions;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
-using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Runtime.CompilerServices;
 
 namespace Chat.Presentation
 {
@@ -51,7 +51,7 @@ namespace Chat.Presentation
             {
                 Console.Clear();
                 Console.WriteLine("Login");
-                do 
+                do
                 {
                     Console.Write("Email: ");
                     inputEmail = Console.ReadLine();
@@ -104,7 +104,7 @@ namespace Chat.Presentation
                 } while (true);
                 break;
             } while (true);
-            user = UserAuthentication.CreateNewUser(email,password);
+            user = UserAuthentication.CreateNewUser(email, password);
             Helper.Greetings(user);
         }
         private static bool ExitApplication()
@@ -258,7 +258,7 @@ namespace Chat.Presentation
         private static void AllChannelsScreen(UserChannel user)
         {
             GroupChannel targetGroup = null;
-            
+
             Console.Clear();
             Console.WriteLine("All Group Channels");
             var groups = Helper.PrintUsersGroupChannels(user);
@@ -286,7 +286,7 @@ namespace Chat.Presentation
                 Helper.NewMessage(groupChannel, user, input);
             } while (true);
         }
-        
+
         //private messages
         private static void PrivateMessagesSubMenu(UserChannel user)
         {
@@ -341,7 +341,7 @@ namespace Chat.Presentation
                 }
             } while (true);
             ViewPrivateMessages(targetUser, user);
-            }
+        }
         private static void ViewPrivateMessages(UserChannel user, UserChannel loggedinUser)
         {
             string input;
@@ -385,7 +385,7 @@ namespace Chat.Presentation
                 switch (userChoice)
                 {
                     case 1:
-                        ChangePasswordScreen();
+                        ChangePasswordScreen(user);
                         break;
 
                     case 2:
@@ -399,6 +399,7 @@ namespace Chat.Presentation
         }
         private static void ChangeEmailScreen(UserChannel user)
         {
+            Console.Clear();
             Console.WriteLine("Change Email");
             Console.WriteLine($"Old mail: {user.Email}");
             string newMail;
@@ -425,8 +426,8 @@ namespace Chat.Presentation
         }
         private static void ChangePasswordScreen(UserChannel user)
         {
+            Console.Clear();
             Console.WriteLine("Change Password");
-            Console.WriteLine($"Old mail: {user.Email}")
             string newPassword;
             do
             {
@@ -437,10 +438,10 @@ namespace Chat.Presentation
             do
             {
                 Console.Write("Old Password : ");
-                if (user.Password == Console.ReadLine())
+                if (user.Password != Console.ReadLine())
                 {
                     Console.WriteLine("Error! Wrong password");
-                    break;
+                    continue;
                 }
                 break;
             } while (true);
@@ -453,7 +454,86 @@ namespace Chat.Presentation
         //admin
         private static void UserManagmentSubMenu()
         {
-            throw new NotImplementedException();
+            string input;
+            var userChoice = -1;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("User management");
+                Console.WriteLine("[1] Promote to admin");
+                Console.WriteLine("[2] Change password");
+                Console.WriteLine("[3] Change email");
+                Console.WriteLine("[0] Main menu");
+
+                if (!Helper.ValidateInput(ref userChoice, 3))
+                {
+                    Helper.ErrorMessage(0);
+                    userChoice = -1;
+                    continue;
+                }
+
+                Console.Clear();
+                var users = Helper.PrintAllUsers();
+                UserChannel targetUser;
+                do
+                {
+                    Console.WriteLine("Enter username of user you wish to modify");
+                    input = Console.ReadLine();
+                    targetUser = users.FirstOrDefault(x => x.Username == input);
+                    if (targetUser is not null) break;
+                    else
+                    {
+                        Console.WriteLine($"Error! {input} is not a valid username");
+                        Helper.PressAnything();
+                    }
+                } while (true);
+
+                switch (userChoice)
+                {
+                    case 1:
+                        Console.WriteLine($"Promote {targetUser.Username} to admin?");
+                        if (Helper.AreYouSure())
+                        {
+                            Helper.PromoteUserToAdmin(targetUser);
+                            Console.WriteLine($"Successfully promoted {targetUser.Username} to admin!");
+                        }
+                        else
+                            Console.WriteLine("Promotion canceled");
+                        Helper.PressAnything();
+                        break;
+
+                    case 2:
+                        Console.Write("New password: ");
+                        string newPassword = Console.ReadLine();
+                        Console.WriteLine($"Change {targetUser} password?");
+                        if (Helper.AreYouSure())
+                        {
+                            Helper.UpdateUserPassword(targetUser, newPassword);
+                            Console.WriteLine($"Successfully changed {targetUser.Username} password!");
+                        }
+                        else
+                            Console.WriteLine("Change canceled");
+                        Helper.PressAnything();
+                        break;
+
+                    case 3:
+                        Console.Write("New email: ");
+                        string newEmail = Console.ReadLine();
+                        Console.WriteLine($"Change {targetUser} email?");
+                        if (Helper.AreYouSure())
+                        {
+                            Helper.UpdateUserEmail(targetUser, newEmail);
+                            Console.WriteLine($"Successfully changed {targetUser.Username} email!");
+                        }
+                        else
+                            Console.WriteLine("Change canceled");
+                        Helper.PressAnything();
+                        break;
+
+                    default:
+                        break;
+                }
+            } while (true);
         }
     }
 }
